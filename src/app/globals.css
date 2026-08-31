@@ -629,7 +629,23 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
    dan pertahanan anti-transplantasi jadi wajah depan.
    ================================================================== */
 
-.beranda { max-width: 52rem; }
+/* Lebar penuh halaman. Di layar lebar judul dan penjelasannya berdampingan,
+   lalu dua bagian penutup juga berdampingan, supaya separuh kanan tidak
+   menganggur. */
+.beranda { max-width: none; }
+
+.berandaKepala { max-width: 52rem; }
+
+@media (min-width: 62rem) {
+  .berandaKepala {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 3.5rem;
+    align-items: end;
+    max-width: none;
+  }
+  .berandaLead { padding-bottom: 0.4rem; }
+}
 
 .berandaJudul {
   font-size: clamp(1.75rem, 5vw, 2.5rem);
@@ -649,8 +665,9 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 
 /* Kotak periksa dibuat lebih besar dari formulir biasa, ini pekerjaan
    utama halaman, bukan pelengkap. */
-.formCari { margin-top: 1.7rem; max-width: 34rem; }
+.formCari { margin-top: 1.7rem; max-width: 46rem; }
 .formCari input[type="text"] {
+  flex: 1 1 22rem;
   font-size: 1.05rem;
   padding: 0.78rem 0.9rem;
 }
@@ -659,8 +676,33 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   padding: 0.78rem 1.4rem;
 }
 
+.berandaBagian { margin-top: 2.6rem; }
+
+@media (min-width: 62rem) {
+  /* Dua bagian penutup berdampingan, dipisah garis tegak. Satu garis
+     tipis, bukan dua kartu. */
+  .berandaBagian {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 3.5rem;
+    align-items: start;
+    border-top: 1px solid var(--ink);
+  }
+  .berandaBagian > section {
+    margin-top: 0;
+    padding: 1.15rem 0 0;
+    border-top: none;
+    max-width: 62ch;
+  }
+  .berandaBagian > section + section {
+    border-left: 1px solid var(--rule);
+    padding-left: 3.5rem;
+    margin-left: -1.75rem;
+  }
+}
+
 .peringatanTransplantasi {
-  margin-top: 2.6rem;
+  margin-top: 0;
   padding: 1.15rem 0 0;
   border-top: 1px solid var(--ink);
   max-width: 52ch;
@@ -716,12 +758,12 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   color: var(--muted);
 }
 
+/* Satu baris ringan tepat di bawah kotak periksa. Bukan tombol, supaya
+   tidak bersaing dengan tombol Periksa. */
 .ajakanDaftar {
-  margin-top: 2.2rem;
-  padding-top: 1.15rem;
-  border-top: 1px solid var(--rule);
-  font-size: 0.95rem;
-  color: var(--ink-soft);
+  margin: 0.9rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
 }
 
 /* ==================================================================
