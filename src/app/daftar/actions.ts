@@ -16,8 +16,8 @@ export async function aksiMulai(formData: FormData) {
 
 export async function aksiCekUlang(formData: FormData) {
   const domain = normalisasiDomain(String(formData.get("domain") || ""));
-  const hasil = await periksaDcv(domain);
-  redirect(
-    `/daftar?domain=${encodeURIComponent(domain)}&kode=${hasil.kode ?? ""}`,
-  );
+  // Hasilnya disimpan ke basis data, jadi halaman membacanya dari sana —
+  // tidak perlu dititipkan lewat alamat URL.
+  await periksaDcv(domain);
+  redirect(`/daftar?domain=${encodeURIComponent(domain)}`);
 }

@@ -69,6 +69,12 @@ export function domainMasukAkal(domain: string): boolean {
 }
 
 function barisKeKeadaan(r: any): KeadaanDcv {
+  let txt: string[] = [];
+  try {
+    txt = r.dcv_txt_terbaca ? JSON.parse(r.dcv_txt_terbaca) : [];
+  } catch {
+    txt = [];
+  }
   return {
     domain: r.domain,
     status: r.dcv_status,
@@ -77,7 +83,25 @@ function barisKeKeadaan(r: any): KeadaanDcv {
     dibuatPada: r.dcv_dibuat_pada,
     terbuktiPada: r.dcv_terbukti_pada ?? null,
     diperiksaPada: r.dcv_diperiksa_pada ?? null,
+    kode: r.dcv_kode_terakhir ?? undefined,
+    txtTerbaca: txt,
   };
+}
+
+/** Catat hasil satu pemeriksaan supaya halaman bisa menampilkannya. */
+function catatPemeriksaan(
+  domain: string,
+  kode: KodeHasil,
+  txt: string[],
+  waktu: string,
+) {
+  ambilDb()
+    .prepare(
+      `UPDATE domain
+          SET dcv_diperiksa_pada = ?, dcv_kode_terakhir = ?, dcv_txt_terbaca = ?
+        WHERE domain = ?`,
+    )
+    .run(waktu, kode, JSON.stringify(txt), domain);
 }
 
 /**
@@ -127,12 +151,72 @@ export function bacaKeadaan(domainMentah: string): KeadaanDcv | null {
 /** Pembaca TXT. Dipisah supaya logika pencocokan bisa diuji tanpa jaringan. */
 export type PembacaTxt = (domain: string) => Promise<string[]>;
 
-/** Pembaca sungguhan: satu kueri DNS lewat modul bawaan Node. */
-export const bacaTxtLewatDns: PembacaTxt = async (domain) => {
-  const r = new dnsPromises.Resolver({ timeout: 5000, tries: 2 });
-  const hasil = await r.resolveTxt(domain);
-  // Satu TXT record bisa terpecah jadi beberapa potong; gabungkan.
+/** Gabungkan potongan satu TXT record jadi satu baris utuh. */
+function rapikan(hasil: string[][]): string[] {
   return hasil.map((potongan) => potongan.join(""));
+}
+
+/**
+ * Cara lama: bertanya ke resolver perantara (bawaan sistem).
+ * Dipakai hanya sebagai cadangan — jawabannya bisa berasal dari cache.
+ */
+export const bacaTxtLewatResolver: PembacaTxt = async (domain) => {
+  const r = new dnsPromises.Resolver({ timeout: 5000, tries: 2 });
+  return rapikan(await r.resolveTxt(domain));
+};
+
+/** Galat yang berarti "sudah dijawab, memang tidak ada record". */
+const JAWABAN_KOSONG = new Set(["ENODATA", "ENOTFOUND"]);
+
+/**
+ * Cara utama: bertanya LANGSUNG ke server DNS resmi domain itu.
+ *
+ * Kenapa begini, bukan lewat resolver biasa: resolver perantara menyimpan
+ * jawaban "tidak ada record" selama masa yang ditentukan SOA — di Cloudflare
+ * 30 menit. Jadi kalau pemilik memasang TXT sesudah kita pernah bertanya,
+ * jawabannya tetap kosong sampai setengah jam meski recordnya sudah ada.
+ *
+ * Bertanya ke server resmi melewati seluruh cache itu. Cara ini pula yang
+ * dipakai Certificate Authority saat memvalidasi kepemilikan domain.
+ *
+ * Ongkosnya: butuh 2-3 kueri, bukan satu.
+ */
+export const bacaTxtDariOtoritatif: PembacaTxt = async (domain) => {
+  const dasar = new dnsPromises.Resolver({ timeout: 5000, tries: 2 });
+
+  const namaNs = await dasar.resolveNs(domain);
+  const alamat: string[] = [];
+  for (const n of namaNs) {
+    try {
+      alamat.push(...(await dasar.resolve4(n)));
+    } catch {
+      // satu NS tidak terjawab bukan masalah selama ada yang lain
+    }
+  }
+  if (alamat.length === 0) {
+    throw Object.assign(new Error("server resmi domain tidak terjangkau"), {
+      code: "ENOAUTHNS",
+    });
+  }
+
+  const resmi = new dnsPromises.Resolver({ timeout: 5000, tries: 2 });
+  resmi.setServers(alamat);
+  return rapikan(await resmi.resolveTxt(domain));
+};
+
+/**
+ * Pembaca yang dipakai aplikasi: coba server resmi dulu, mundur ke resolver
+ * biasa hanya bila jalurnya benar-benar terhalang (jaringan, bukan jawaban).
+ */
+export const bacaTxtLewatDns: PembacaTxt = async (domain) => {
+  try {
+    return await bacaTxtDariOtoritatif(domain);
+  } catch (err: any) {
+    // "Tidak ada record" dari server resmi adalah jawaban FINAL, bukan
+    // kegagalan. Jangan mundur ke resolver — jawabannya cuma cache lama.
+    if (JAWABAN_KOSONG.has(err?.code)) return [];
+    return await bacaTxtLewatResolver(domain);
+  }
 };
 
 /**
@@ -172,10 +256,9 @@ export async function periksaDcv(
     txt = await baca(domain);
   } catch (err: any) {
     const kode = err?.code || err?.message || String(err);
-    db.prepare("UPDATE domain SET dcv_diperiksa_pada = ? WHERE domain = ?").run(
-      sekarang,
-      domain,
-    );
+    const kodeHasil: KodeHasil =
+      kode === "ENOTFOUND" || kode === "ENODATA" ? "belum-ada-txt" : "gagal-dns";
+    catatPemeriksaan(domain, kodeHasil, [], sekarang);
     const pesan =
       kode === "ENOTFOUND" || kode === "ENODATA"
         ? "Belum ada TXT record yang terbaca. Kalau baru dipasang, tunggu beberapa menit lalu cek ulang."
@@ -183,7 +266,7 @@ export async function periksaDcv(
     return {
       ...barisKeKeadaan(r),
       diperiksaPada: sekarang,
-      kode: kode === "ENOTFOUND" || kode === "ENODATA" ? "belum-ada-txt" : "gagal-dns",
+      kode: kodeHasil,
       pesan,
       txtTerbaca: [],
     };
@@ -193,14 +276,12 @@ export async function periksaDcv(
   const cocok = txt.some((baris) => baris.trim() === dicari);
 
   if (!cocok) {
-    db.prepare("UPDATE domain SET dcv_diperiksa_pada = ? WHERE domain = ?").run(
-      sekarang,
-      domain,
-    );
+    const kodeHasil: KodeHasil = txt.length === 0 ? "belum-ada-txt" : "belum-cocok";
+    catatPemeriksaan(domain, kodeHasil, txt, sekarang);
     return {
       ...barisKeKeadaan(r),
       diperiksaPada: sekarang,
-      kode: txt.length === 0 ? "belum-ada-txt" : "belum-cocok",
+      kode: kodeHasil,
       pesan:
         txt.length === 0
           ? "Domain ini belum punya TXT record sama sekali."
@@ -215,9 +296,11 @@ export async function periksaDcv(
         SET dcv_status = 'terbukti',
             dcv_token = NULL,
             dcv_terbukti_pada = ?,
-            dcv_diperiksa_pada = ?
+            dcv_diperiksa_pada = ?,
+            dcv_kode_terakhir = 'terbukti',
+            dcv_txt_terbaca = ?
       WHERE domain = ?`,
-  ).run(sekarang, sekarang, domain);
+  ).run(sekarang, sekarang, JSON.stringify(txt), domain);
 
   const baru: any = db.prepare("SELECT * FROM domain WHERE domain = ?").get(domain);
   return {

@@ -28,9 +28,22 @@ export function ambilDb(): DatabaseSync {
       dcv_status          TEXT NOT NULL DEFAULT 'menunggu',
       dcv_dibuat_pada     TEXT NOT NULL,
       dcv_terbukti_pada   TEXT,
-      dcv_diperiksa_pada  TEXT
+      dcv_diperiksa_pada  TEXT,
+      -- Hasil pemeriksaan terakhir, supaya halaman bisa menunjukkan bahwa
+      -- tombol "Cek ulang" benar-benar mengerjakan sesuatu.
+      dcv_kode_terakhir   TEXT,
+      dcv_txt_terbaca     TEXT
     );
   `);
+
+  // Tambahkan kolom baru pada basis data yang sudah terlanjur dibuat.
+  for (const k of ["dcv_kode_terakhir", "dcv_txt_terbaca"]) {
+    try {
+      db.exec(`ALTER TABLE domain ADD COLUMN ${k} TEXT`);
+    } catch {
+      // sudah ada — abaikan
+    }
+  }
 
   return db;
 }

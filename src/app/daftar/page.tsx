@@ -20,6 +20,16 @@ function waktuLokal(iso: string | null) {
   });
 }
 
+/** Jam lengkap dengan detik — supaya tiap klik terlihat menghasilkan sesuatu. */
+function jamLengkap(iso: string | null) {
+  if (!iso) return null;
+  return new Date(iso).toLocaleTimeString("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+}
+
 export default async function Pendaftaran({
   searchParams,
 }: {
@@ -147,18 +157,38 @@ export default async function Pendaftaran({
         </button>
       </form>
 
-      {sp.kode && PESAN[sp.kode] && (
-        <p className={sp.kode === "gagal-dns" ? "galat" : "kabar"}>
-          {PESAN[sp.kode]}
-        </p>
+      {keadaan.diperiksaPada && (
+        <div className={keadaan.kode === "gagal-dns" ? "galat" : "kabar"}>
+          <p className="kabarJudul">
+            Diperiksa pukul {jamLengkap(keadaan.diperiksaPada)}
+          </p>
+          <p className="kabarIsi">
+            {(keadaan.kode && PESAN[keadaan.kode]) ||
+              "Pemeriksaan dijalankan."}
+          </p>
+
+          {keadaan.txtTerbaca && keadaan.txtTerbaca.length > 0 && (
+            <>
+              <p className="kabarIsi">
+                TXT record yang kami baca di domain ini:
+              </p>
+              <ul className="daftarTxt">
+                {keadaan.txtTerbaca.map((baris, i) => (
+                  <li key={i}>
+                    <code>{baris}</code>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
       )}
 
-      {keadaan.diperiksaPada && (
-        <p className="note">
-          Terakhir diperiksa {waktuLokal(keadaan.diperiksaPada)}.{" "}
-          <a href="/daftar">Daftarkan domain lain</a>
-        </p>
-      )}
+      <p className="note">
+        Kami bertanya langsung ke server DNS resmi domain Anda, bukan lewat
+        perantara — jadi hasilnya selalu yang terbaru.{" "}
+        <a href="/daftar">Daftarkan domain lain</a>
+      </p>
     </>
   );
 }

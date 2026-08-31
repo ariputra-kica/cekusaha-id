@@ -262,3 +262,27 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   font-size: 0.92rem;
   color: var(--ink-soft);
 }
+
+.kabarJudul {
+  margin: 0 0 0.3rem;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+.kabarIsi { margin: 0 0 0.35rem; }
+.kabarIsi:last-child { margin-bottom: 0; }
+
+.daftarTxt {
+  margin: 0.3rem 0 0;
+  padding-left: 1.1rem;
+  font-size: 0.86rem;
+}
+.daftarTxt li { margin-bottom: 0.25rem; }
+.daftarTxt code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  word-break: break-all;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+  padding: 0.05rem 0.3rem;
+}
