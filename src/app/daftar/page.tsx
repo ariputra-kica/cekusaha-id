@@ -1,5 +1,6 @@
 import { bacaKeadaan } from "@/lib/dcv";
 import { aksiMulai, aksiCekUlang } from "./actions";
+import TombolKirim from "./TombolKirim";
 
 const PESAN: Record<string, string> = {
   "belum-ada-txt":
@@ -64,9 +65,7 @@ export default async function Pendaftaran({
             spellCheck={false}
             required
           />
-          <button type="submit" className="tombol">
-            Terbitkan kode
-          </button>
+          <TombolKirim label="Terbitkan kode" labelSedang="Menerbitkan…" />
         </form>
 
         {sp.galat === "domain-tidak-sah" && (
@@ -152,9 +151,10 @@ export default async function Pendaftaran({
 
       <form action={aksiCekUlang} className="formBaris">
         <input type="hidden" name="domain" value={keadaan.domain} />
-        <button type="submit" className="tombol">
-          Cek ulang sekarang
-        </button>
+        <TombolKirim
+          label="Cek ulang sekarang"
+          labelSedang="Sedang memeriksa DNS…"
+        />
       </form>
 
       {keadaan.diperiksaPada && (

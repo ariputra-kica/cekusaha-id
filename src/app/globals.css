@@ -286,3 +286,33 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   border-radius: 2px;
   padding: 0.05rem 0.3rem;
 }
+
+/* ---------- tombol yang sedang bekerja ---------- */
+
+.tombol[aria-busy="true"] {
+  cursor: progress;
+  opacity: 0.85;
+}
+.tombol:disabled { cursor: progress; }
+
+.putar {
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-right: 0.5em;
+  vertical-align: -0.08em;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: berputar 0.7s linear infinite;
+}
+
+@keyframes berputar {
+  to { transform: rotate(360deg); }
+}
+
+/* Kalau pengguna meminta animasi dikurangi, cukup titik diam —
+   perubahan teks tombol sudah cukup memberi tahu bahwa proses berjalan. */
+@media (prefers-reduced-motion: reduce) {
+  .putar { animation: none; border-top-color: rgba(255, 255, 255, 0.7); }
+}
