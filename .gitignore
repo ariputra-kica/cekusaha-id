@@ -1,0 +1,26 @@
+# Kredensial — TIDAK BOLEH PERNAH ter-commit
+.env
+.env.local
+.env.*.local
+
+# Basis data SQLite
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+data/
+
+# Next.js
+node_modules/
+.next/
+out/
+build/
+next-env.d.ts
+
+# Log
+npm-debug.log*
+yarn-error.log*
+*.log
+
+# macOS
+.DS_Store
