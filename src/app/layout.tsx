@@ -29,7 +29,6 @@ export default function RootLayout({
             <Link href="/" className="wordmark">
               cekusaha<span className="tld">.id</span>
             </Link>
-            <span className="tagline">Verifikasi domain dan identitas</span>
           </div>
         </header>
 

@@ -9,7 +9,7 @@ const PESAN_EID: Record<string, string> = {
     "Belum terbaca. Buka tautan di atas lewat ponsel Anda, lalu tekan periksa lagi.",
   "menunggu-persetujuan":
     "Dompet Anda sudah membaca permintaan ini. Sekarang tekan setuju di ponsel, lalu periksa lagi.",
-  tersimpan: "Data dari dompet e.id Anda sudah kami terima.",
+  tersimpan: "Data dari wallet e.id Anda sudah kami terima.",
   ditolak: "Anda menolak berbagi data. Mulai lagi kalau berubah pikiran.",
   kedaluwarsa: "Sesi ini sudah kedaluwarsa. Mulai lagi dari awal.",
   hilang:
@@ -62,9 +62,8 @@ function SesiBerjalan({
   return (
     <>
       <p className="langkahIsi">
-        Buka tautan ini di ponsel Anda. Aplikasi e.id akan menampilkan data apa
-        saja yang kami minta: {SKEMA[sesi.tingkat].mintaManusia}. Anda yang
-        memutuskan menyetujui atau menolak.
+        Aplikasi e.id akan menampilkan data apa saja yang kami minta:{" "}
+        {SKEMA[sesi.tingkat].mintaManusia}.
       </p>
 
       {/* Tab baru: kalau tautan ini menimpa halaman, pemilik kehilangan
@@ -77,7 +76,6 @@ function SesiBerjalan({
         >
           Buka di aplikasi e.id
         </a>
-        <span className="petunjukTautan">terbuka di tab baru</span>
       </p>
 
       <form action={aksiPeriksaEid} className="formBaris">
@@ -101,15 +99,10 @@ export default async function Pendaftaran({
   if (!keadaan) {
     return (
       <>
-        <p className="eyebrow">Untuk pemilik usaha, langkah 1 dari 4</p>
-        <h1>Buktikan domain ini milik Anda</h1>
-        <p className="lead">
-          Kami menerbitkan satu kode unik. Anda memasangnya di pengaturan DNS
-          domain Anda. Setelah itu kami memeriksanya. Hanya orang yang
-          benar-benar mengendalikan domain yang bisa melakukannya.
-        </p>
+        <p className="eyebrow">Untuk pemilik usaha.</p>
+        <h1 className="daftarJudul">Verifikasi Kepemilikan Domain</h1>
 
-        <form action={aksiMulai} className="formBaris">
+        <form action={aksiMulai} className="formBaris formBesar">
           <label className="labelTersembunyi" htmlFor="domain">
             Alamat domain
           </label>
@@ -123,7 +116,7 @@ export default async function Pendaftaran({
             spellCheck={false}
             required
           />
-          <TombolKirim label="Terbitkan kode" labelSedang="Menerbitkan…" />
+          <TombolKirim label="Mulai Verifikasi" labelSedang="Menyiapkan…" />
         </form>
 
         {sp.galat === "domain-tidak-sah" && (
@@ -149,10 +142,39 @@ export default async function Pendaftaran({
       sp.eid || "",
     );
 
+    /* Kabar terakhir dan kotak simpan. Letaknya ikut keadaan: selama
+       identitas belum terbukti, keduanya berdiri DI ATAS ajakan naik tingkat,
+       karena menyimpan adalah langkah utama dan naik tingkat hanya tawaran.
+       Begitu identitas terbukti, tidak ada lagi tawaran yang tersisa, jadi
+       keduanya turun ke paling bawah sebagai penutup alur. */
+    const blokAkhir = (
+      <>
+        {kabar && <p className={kabarBuruk ? "galat" : "kabar"}>{kabar}</p>}
+
+        {kontak && (
+          <section className="simpanBlok">
+            <h2>Siap disimpan</h2>
+            <p>
+              {diri
+                ? "Kepemilikan domain dan identitas Anda sudah terverifikasi."
+                : "Kepemilikan domain dan kontak Anda sudah terverifikasi. Simpan dan Lihat hasilnya sekarang atau lengkapi verifikasi identitas di bawah."}
+            </p>
+            <form action={aksiTerbitkan} className="formBaris">
+              <input type="hidden" name="domain" value={keadaan.domain} />
+              <TombolKirim
+                label="Simpan dan lihat hasil"
+                labelSedang="Menyimpan…"
+              />
+            </form>
+          </section>
+        )}
+      </>
+    );
+
     return (
       <>
         <p className="eyebrow">Untuk pemilik usaha</p>
-        <h1>{keadaan.domain}</h1>
+        <h1 className="domainJudul">{keadaan.domain}</h1>
 
         {/* ---- Langkah 1: kepemilikan domain ---- */}
         <section className="langkah">
@@ -161,8 +183,7 @@ export default async function Pendaftaran({
             <span className="status status--verified">Terbukti</span>
           </div>
           <p className="langkahIsi">
-            Dibuktikan lewat DNS pada {waktuLokal(keadaan.terbuktiPada)}. Kode
-            verifikasinya sudah dihapus dari basis data kami.
+            Dibuktikan lewat DNS pada {waktuLokal(keadaan.terbuktiPada)}.
           </p>
         </section>
 
@@ -193,8 +214,8 @@ export default async function Pendaftaran({
           ) : (
             <>
               <p className="langkahIsi">
-                Buktikan email dan nomor telepon Anda lewat dompet e.id. Yang
-                kami minta hanya dua hal itu.
+                Verifikasi email dan nomor telepon Anda melalui EID Membership
+                di wallet e.id.
               </p>
               <form action={aksiMulaiEid} className="formBaris">
                 <input type="hidden" name="domain" value={keadaan.domain} />
@@ -208,35 +229,10 @@ export default async function Pendaftaran({
           )}
         </section>
 
-        {kabar && <p className={kabarBuruk ? "galat" : "kabar"}>{kabar}</p>}
-
-        {/* Kontak sudah cukup untuk menyimpan. Identitas boleh menyusul
-            kapan pun, dan ajakannya ada di halaman hasil. */}
-        {kontak ? (
-          <section className="simpanBlok">
-            <h2>Siap disimpan</h2>
-            <p>
-              {diri
-                ? "Kepemilikan domain dan identitas Anda sudah terbukti."
-                : "Kepemilikan domain dan kontak Anda sudah terbukti. Identitas bisa ditambahkan kapan saja nanti."}
-            </p>
-            <form action={aksiTerbitkan} className="formBaris">
-              <input type="hidden" name="domain" value={keadaan.domain} />
-              <TombolKirim
-                label="Simpan dan lihat hasil"
-                labelSedang="Menyimpan…"
-              />
-            </form>
-          </section>
-        ) : (
-          <p className="catatanSimpan">
-            Setelah Kontak Terverifikasi selesai, Anda bisa menyimpan dan
-            menerbitkan halaman publiknya.
-          </p>
-        )}
+        {!diri && blokAkhir}
 
         {/* ---- Langkah 3: identitas, hanya setelah kontak ---- */}
-        <section className="langkah">
+        <section className="langkah langkah--akhir">
           <div className="langkahKepala">
             <h2>Identitas Terverifikasi</h2>
             {diri ? (
@@ -261,19 +257,15 @@ export default async function Pendaftaran({
             </dl>
           ) : !kontak ? (
             <p className="langkahIsi">
-              Selesaikan verifikasi kontak lebih dulu. Kepercayaan dibangun
-              bertahap. Anda tidak harus menyerahkan semuanya sekaligus.
+              Selesaikan verifikasi kontak lebih dulu.
             </p>
           ) : sesiDiri ? (
             <SesiBerjalan domain={keadaan.domain} sesi={sesiDiri} />
           ) : (
             <>
               <p className="langkahIsi">
-                Naikkan tingkatnya dengan membuktikan identitas Anda lewat
-                lembaga sertifikasi elektronik. Kami hanya meminta{" "}
-                <strong>nama</strong> dan <strong>nama lembaga pemeriksanya</strong>.
-                NIK dan tanggal lahir tidak diminta dan tidak pernah sampai ke
-                kami.
+                Naikkan tingkatnya dengan membuktikan identitas Anda lewat KYC
+                Verification by PSrE.
               </p>
               <form action={aksiMulaiEid} className="formBaris">
                 <input type="hidden" name="domain" value={keadaan.domain} />
@@ -288,9 +280,7 @@ export default async function Pendaftaran({
           )}
         </section>
 
-        <p className="note">
-          <a href="/daftar">Daftarkan domain lain</a>
-        </p>
+        {diri && blokAkhir}
       </>
     );
   }
@@ -298,16 +288,16 @@ export default async function Pendaftaran({
   /* ---------- Menunggu ---------- */
   return (
     <>
-      <p className="eyebrow">Untuk pemilik usaha, langkah 1 dari 4</p>
-      <h1>{keadaan.domain}</h1>
+      <p className="eyebrow">Untuk pemilik usaha.</p>
+      <h1 className="domainJudul">{keadaan.domain}</h1>
 
       <p className="statusBaris">
         <span className="status status--pending">Menunggu pemasangan</span>
       </p>
 
-      <p className="lead">
-        Tambahkan satu TXT record berikut di pengaturan DNS domain Anda,
-        biasanya di panel tempat Anda membeli domain.
+      <p className="dcvTeks">
+        Tambahkan TXT record berikut di pengaturan DNS domain Anda. Jika
+        mengalami kesulitan, hubungi penyedia domain Anda.
       </p>
 
       <dl className="recordDcv">
@@ -318,8 +308,7 @@ export default async function Pendaftaran({
         <div>
           <dt>Nama / Host</dt>
           <dd>
-            <code>@</code>{" "}
-            <span className="petunjuk">(artinya domain itu sendiri)</span>
+            <code>{keadaan.domain}</code> atau <code>@</code>
           </dd>
         </div>
         <div>
@@ -330,18 +319,15 @@ export default async function Pendaftaran({
         </div>
       </dl>
 
-      <p className="lanjut">
-        Setelah disimpan, tekan tombol di bawah. Perubahan DNS tidak langsung
-        menyebar. Kalau belum terbaca, tunggu beberapa menit lalu coba lagi.
-        Halaman ini tidak akan hilang.
+      <p className="dcvTeks">
+        Setelah disimpan, tekan tombol di bawah. Perubahan DNS kadang
+        memerlukan waktu lebih lama. Jika belum terbaca, tunggu beberapa menit
+        lalu coba lagi.
       </p>
 
       <form action={aksiCekUlang} className="formBaris">
         <input type="hidden" name="domain" value={keadaan.domain} />
-        <TombolKirim
-          label="Cek ulang sekarang"
-          labelSedang="Sedang memeriksa DNS…"
-        />
+        <TombolKirim label="Cek Sekarang" labelSedang="Sedang memeriksa DNS…" />
       </form>
 
       {keadaan.diperiksaPada && (
@@ -370,12 +356,6 @@ export default async function Pendaftaran({
           )}
         </div>
       )}
-
-      <p className="note">
-        Kami bertanya langsung ke server DNS resmi domain Anda, bukan lewat
-        perantara, jadi hasilnya selalu yang terbaru.{" "}
-        <a href="/daftar">Daftarkan domain lain</a>
-      </p>
     </>
   );
 }
