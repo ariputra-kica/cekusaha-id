@@ -420,8 +420,14 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   margin-top: 0.9rem;
+}
+
+/* Menegaskan bahwa keduanya alternatif, bukan dua langkah berurutan. */
+.dompetAtau {
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
 .qrDompet {

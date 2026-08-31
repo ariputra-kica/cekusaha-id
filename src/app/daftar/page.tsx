@@ -112,6 +112,8 @@ function SesiBerjalan({
           </figure>
         )}
 
+        {sesi.walletUrl && <span className="dompetAtau">atau</span>}
+
         {/* Tab baru: kalau tautan ini menimpa halaman, pemilik kehilangan
             tempat menekan "Periksa status" setelah menyetujui di e.id. */}
         <p className="tautanDompet">
@@ -127,7 +129,7 @@ function SesiBerjalan({
 
       <div className="dompetPeriksa">
         <p className="langkahIsi">
-          Setelah menyetujui di aplikasi, tekan tombol di bawah.
+          Setelah selesai verifikasi di wallet e.id, tekan tombol di bawah.
         </p>
         <form action={aksiPeriksaEid} className="formBaris">
           <input type="hidden" name="domain" value={domain} />
