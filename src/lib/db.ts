@@ -76,6 +76,32 @@ export function ambilDb(): DatabaseSync {
     );
   `);
 
+  db.exec(`
+    -- Salinan data dari sumber luar: RDAP dan sertifikat TLS.
+    -- Disimpan sekali saat pendaftaran. Halaman B membaca dari sini,
+    -- TIDAK pernah menembak sumbernya saat halaman dibuka.
+    CREATE TABLE IF NOT EXISTS sumber_luar (
+      domain               TEXT PRIMARY KEY,
+
+      rdap_ok              INTEGER,
+      rdap_registrasi      TEXT,
+      rdap_kedaluwarsa     TEXT,
+      rdap_registrar       TEXT,
+      rdap_diperiksa       TEXT,
+      rdap_galat           TEXT,
+
+      ssl_ok               INTEGER,
+      ssl_jenis            TEXT,   -- 'DV' | 'OV'
+      ssl_organisasi       TEXT,
+      ssl_penerbit         TEXT,
+      ssl_penerbit_org     TEXT,
+      ssl_berlaku_sampai   TEXT,
+      ssl_tepercaya        INTEGER,
+      ssl_diperiksa        TEXT,
+      ssl_galat            TEXT
+    );
+  `);
+
   // Tambahkan kolom baru pada basis data yang sudah terlanjur dibuat.
   for (const k of ["dcv_kode_terakhir", "dcv_txt_terbaca"]) {
     try {

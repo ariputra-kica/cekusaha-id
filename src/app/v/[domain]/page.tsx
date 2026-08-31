@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { bacaDataPublik } from "@/lib/publik";
+import { rapikanNama, rapikanTelepon, rapikanVerificator } from "@/lib/tampilan";
 
-const KONTAK_LAPORAN = process.env.KONTAK_LAPORAN || "laporan@cekusaha.id";
+const KONTAK_LAPORAN = process.env.KONTAK_LAPORAN || "abuse@cekusaha.id";
 
 function tanggal(iso: string | null) {
   if (!iso) return null;
@@ -142,13 +143,13 @@ export default async function VerifikasiPublik({
               {d.nama && (
                 <div>
                   <dt>Nama pemilik</dt>
-                  <dd>{d.nama}</dd>
+                  <dd>{rapikanNama(d.nama)}</dd>
                 </div>
               )}
               {d.verificator && (
                 <div>
                   <dt>Diperiksa oleh</dt>
-                  <dd>{d.verificator}</dd>
+                  <dd>{rapikanVerificator(d.verificator)}</dd>
                 </div>
               )}
               {d.email && (
@@ -160,7 +161,7 @@ export default async function VerifikasiPublik({
               {d.telepon && (
                 <div>
                   <dt>Telepon</dt>
-                  <dd>{d.telepon}</dd>
+                  <dd>{rapikanTelepon(d.telepon)}</dd>
                 </div>
               )}
             </dl>
@@ -191,18 +192,25 @@ export default async function VerifikasiPublik({
           </div>
 
           {d.ssl.ada ? (
-            <dl className="rincian">
-              {d.ssl.organisasi && (
+            <>
+              <p className="pilarIsi">
+                {d.ssl.organisasi
+                  ? "Sertifikat situs ini memuat nama organisasi yang sudah divalidasi penerbitnya."
+                  : "Sertifikat situs ini memvalidasi kendali atas domain. Itu jenis yang paling umum dipakai situs yang sah."}
+              </p>
+              <dl className="rincian">
+                {d.ssl.organisasi && (
+                  <div>
+                    <dt>Organisasi</dt>
+                    <dd>{d.ssl.organisasi}</dd>
+                  </div>
+                )}
                 <div>
-                  <dt>Organisasi</dt>
-                  <dd>{d.ssl.organisasi}</dd>
+                  <dt>Penerbit</dt>
+                  <dd>{d.ssl.penerbit}</dd>
                 </div>
-              )}
-              <div>
-                <dt>Penerbit</dt>
-                <dd>{d.ssl.penerbit}</dd>
-              </div>
-            </dl>
+              </dl>
+            </>
           ) : (
             <p className="pilarIsi">
               Pembacaan sertifikat belum tersimpan untuk domain ini.
@@ -216,14 +224,18 @@ export default async function VerifikasiPublik({
         <h2>Catatan pendaftaran domain</h2>
         {d.rdap.ada ? (
           <dl className="rincian rincian--kalem">
-            <div>
-              <dt>Terdaftar sejak</dt>
-              <dd>{tanggal(d.rdap.tanggalRegistrasi)}</dd>
-            </div>
-            <div>
-              <dt>Registrar</dt>
-              <dd>{d.rdap.registrar}</dd>
-            </div>
+            {d.rdap.tanggalRegistrasi && (
+              <div>
+                <dt>Terdaftar sejak</dt>
+                <dd>{tanggal(d.rdap.tanggalRegistrasi)}</dd>
+              </div>
+            )}
+            {d.rdap.registrar && (
+              <div>
+                <dt>Registrar</dt>
+                <dd>{d.rdap.registrar}</dd>
+              </div>
+            )}
           </dl>
         ) : (
           <p className="sekunderIsi">

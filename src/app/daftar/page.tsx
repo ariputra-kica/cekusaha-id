@@ -2,6 +2,7 @@ import { bacaKeadaan } from "@/lib/dcv";
 import { bacaSemuaIdentitas, bacaSesiAktif, SKEMA, type Tingkat } from "@/lib/eid";
 import { aksiMulai, aksiCekUlang, aksiMulaiEid, aksiPeriksaEid } from "./actions";
 import TombolKirim from "./TombolKirim";
+import { rapikanNama, rapikanTelepon, rapikanVerificator } from "@/lib/tampilan";
 
 const PESAN_EID: Record<string, string> = {
   "menunggu-pindai":
@@ -182,7 +183,7 @@ export default async function Pendaftaran({
               </div>
               <div>
                 <dt>Telepon</dt>
-                <dd>{kontak.phoneNumber}</dd>
+                <dd>{rapikanTelepon(kontak.phoneNumber)}</dd>
               </div>
             </dl>
           ) : sesiKontak ? (
@@ -222,11 +223,11 @@ export default async function Pendaftaran({
             <dl className="dataIdentitas">
               <div>
                 <dt>Nama</dt>
-                <dd>{diri.fullname}</dd>
+                <dd>{rapikanNama(diri.fullname)}</dd>
               </div>
               <div>
                 <dt>Diverifikasi oleh</dt>
-                <dd>{diri.verificator}</dd>
+                <dd>{rapikanVerificator(diri.verificator)}</dd>
               </div>
             </dl>
           ) : !kontak ? (

@@ -16,6 +16,7 @@
 
 import { ambilDb } from "./db.ts";
 import { normalisasiDomain } from "./dcv.ts";
+import { bacaSumberLuar } from "./sumber.ts";
 
 export type TingkatPublik = "identitas" | "kontak" | null;
 
@@ -34,7 +35,7 @@ export type DataPublik = {
   email: string | null;
   telepon: string | null;
 
-  /** Pilar 3 — sertifikat SSL. Belum tersimpan; tempatnya disediakan. */
+  /** Pilar 3 — sertifikat situs, dari salinan tersimpan. */
   ssl: {
     ada: boolean;
     jenisValidasi: "DV" | "OV" | null;
@@ -42,7 +43,7 @@ export type DataPublik = {
     organisasi: string | null;
   };
 
-  /** Detail sekunder — RDAP. Belum tersimpan; tempatnya disediakan. */
+  /** Detail sekunder — catatan registri, dari salinan tersimpan. */
   rdap: {
     ada: boolean;
     tanggalRegistrasi: string | null;
@@ -86,6 +87,7 @@ export function bacaDataPublik(domainMentah: string): DataPublik {
     .all(domain);
   const kontak = baris.find((b) => b.tingkat === "kontak") ?? null;
   const diri = baris.find((b) => b.tingkat === "identitas") ?? null;
+  const luar = bacaSumberLuar(domain);
 
   // Tingkat yang dinyatakan adalah yang tertinggi yang benar-benar terbukti.
   const tingkat: TingkatPublik = diri ? "identitas" : kontak ? "kontak" : null;
@@ -104,11 +106,27 @@ export function bacaDataPublik(domainMentah: string): DataPublik {
     email: kontak?.email ?? null,
     telepon: kontak?.phone_number ?? null,
 
+    ssl: {
+      ada: luar.ssl.ada,
+      jenisValidasi: luar.ssl.jenisValidasi,
+      // Penerbit ditampilkan sebagai teks, tanpa logo Certificate Authority.
+      penerbit: luar.ssl.penerbitOrganisasi ?? luar.ssl.penerbit,
+      organisasi: luar.ssl.organisasi,
+    },
+
+    rdap: {
+      ada: luar.rdap.ada,
+      tanggalRegistrasi: luar.rdap.tanggalRegistrasi,
+      registrar: luar.rdap.registrar,
+    },
+
     diperiksaTerakhir: terbaru(
       d.dcv_terbukti_pada,
       d.dcv_diperiksa_pada,
       kontak?.dibuat_pada,
       diri?.dibuat_pada,
+      luar.rdap.diperiksaPada,
+      luar.ssl.diperiksaPada,
     ),
   };
 }

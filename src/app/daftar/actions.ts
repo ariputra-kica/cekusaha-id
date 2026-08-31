@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { mulaiDcv, periksaDcv, normalisasiDomain, domainMasukAkal } from "@/lib/dcv";
 import { mulaiSesi, periksaSesi, type Tingkat } from "@/lib/eid";
+import { segarkanSumberLuar } from "@/lib/sumber";
 
 export async function aksiMulai(formData: FormData) {
   const domain = normalisasiDomain(String(formData.get("domain") || ""));
@@ -15,7 +16,31 @@ export async function aksiMulai(formData: FormData) {
 
 export async function aksiCekUlang(formData: FormData) {
   const domain = normalisasiDomain(String(formData.get("domain") || ""));
-  await periksaDcv(domain);
+  const h = await periksaDcv(domain);
+
+  // Begitu kepemilikan terbukti, ambil catatan registri dan sertifikatnya
+  // SEKALI di sini lalu simpan. Halaman B nanti membaca dari salinan itu,
+  // tidak pernah menembak sumbernya saat dibuka.
+  if (h.status === "terbukti") {
+    try {
+      await segarkanSumberLuar(domain);
+    } catch {
+      // Gagal mengambil data luar tidak boleh membatalkan pembuktian
+      // kepemilikan yang sudah sah. Bisa disegarkan lagi kemudian.
+    }
+  }
+
+  redirect(`/daftar?domain=${encodeURIComponent(domain)}`);
+}
+
+/** Ambil ulang catatan registri dan sertifikat untuk satu domain. */
+export async function aksiSegarkanSumber(formData: FormData) {
+  const domain = normalisasiDomain(String(formData.get("domain") || ""));
+  try {
+    await segarkanSumberLuar(domain);
+  } catch {
+    // dilaporkan lewat keadaan tersimpan, bukan lewat pengecualian
+  }
   redirect(`/daftar?domain=${encodeURIComponent(domain)}`);
 }
 
