@@ -150,3 +150,115 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 .status--verified { color: var(--verified); background: var(--verified-bg); }
 .status--pending  { color: var(--pending);  background: var(--pending-bg); }
+
+/* ---------- formulir dan alur DCV ---------- */
+
+.formBaris {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.6rem;
+  max-width: var(--measure);
+}
+
+.labelTersembunyi {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.formBaris input[type="text"] {
+  flex: 1 1 16rem;
+  font: inherit;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 0.62rem 0.8rem;
+}
+.formBaris input[type="text"]::placeholder { color: #9aa0aa; }
+.formBaris input[type="text"]:focus { border-color: var(--brand); }
+
+.tombol {
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--brand);
+  border: 1px solid var(--brand);
+  border-radius: var(--radius);
+  padding: 0.62rem 1.15rem;
+  cursor: pointer;
+}
+.tombol:hover { background: var(--brand-soft); border-color: var(--brand-soft); }
+
+.statusBaris { margin: 0.75rem 0 0; }
+
+.recordDcv {
+  margin: 1.6rem 0 0;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+.recordDcv > div {
+  display: grid;
+  grid-template-columns: 9rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.recordDcv > div:last-child { border-bottom: none; }
+.recordDcv dt {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+}
+.recordDcv dd { margin: 0; min-width: 0; }
+.recordDcv code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86rem;
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  border-radius: 2px;
+  padding: 0.1rem 0.35rem;
+}
+.recordDcv .nilaiTxt {
+  display: inline-block;
+  word-break: break-all;
+  line-height: 1.5;
+}
+.recordDcv .petunjuk { font-size: 0.82rem; color: var(--muted); }
+
+.lanjut {
+  margin: 1.4rem 0 0;
+  max-width: var(--measure);
+  color: var(--ink-soft);
+  font-size: 0.94rem;
+}
+
+/* Kabar netral saat masih menunggu. Sengaja BUKAN merah — belum terpasang
+   bukan kesalahan, hanya keadaan yang wajar. */
+.kabar {
+  margin: 1.1rem 0 0;
+  max-width: var(--measure);
+  padding: 0.7rem 0.9rem;
+  background: var(--pending-bg);
+  border-left: 3px solid var(--pending);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+/* Dipakai hanya saat ada yang benar-benar salah, misalnya masukan tidak sah. */
+.galat {
+  margin: 1.1rem 0 0;
+  max-width: var(--measure);
+  padding: 0.7rem 0.9rem;
+  background: #f6ece7;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
