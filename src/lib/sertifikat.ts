@@ -3,7 +3,7 @@
  *
  * HANYA DIJALANKAN DI SERVER. Modul `node:tls` memang tidak ada di browser.
  *
- * Batas keyakinan — dibaca sebelum memakai hasilnya:
+ * Batas keyakinan. dibaca sebelum memakai hasilnya:
  *
  *   DV vs OV  → DAPAT DIPASTIKAN. Ada tidaknya field Organization (O) pada
  *               subject sertifikat adalah pembeda yang benar dan baku.
@@ -41,7 +41,7 @@ export type HasilSertifikat = {
   tepercaya: boolean | null;
   galatKepercayaan: string | null;
 
-  /** TIDAK DIPASTIKAN — lihat catatan di atas berkas. */
+  /** TIDAK DIPASTIKAN. lihat catatan di atas berkas. */
   petunjukEv: {
     kodeKebijakanDitemukan: string | null;
     catatan: string;

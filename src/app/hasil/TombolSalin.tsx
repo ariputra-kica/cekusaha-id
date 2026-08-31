@@ -17,7 +17,7 @@ export default function TombolSalin({ teks }: { teks: string }) {
           setTersalin(true);
           setTimeout(() => setTersalin(false), 2000);
         } catch {
-          // Peramban menolak akses papan klip — pengguna masih bisa
+          // Peramban menolak akses papan klip. Pengguna masih bisa
           // menyorot dan menyalin sendiri.
         }
       }}

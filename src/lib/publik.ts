@@ -1,16 +1,16 @@
 /**
- * Penyusun data untuk Halaman B — halaman verifikasi publik.
+ * Penyusun data untuk Halaman B. halaman verifikasi publik.
  *
  * HANYA DIJALANKAN DI SERVER, dan HANYA membaca salinan tersimpan di
  * SQLite. Tidak ada panggilan ke RDAP, e.id, atau pembacaan sertifikat
- * saat halaman dibuka — halaman ini akan dibuka berulang kali di depan
+ * saat halaman dibuka. halaman ini akan dibuka berulang kali di depan
  * juri dan pengunjung, dan menembak API pihak ketiga tiap kali berarti
  * lambat dan berisiko kena batas laju.
  *
  * Pemisahan PUBLIK vs INTERNAL mengikuti CLAUDE.md. Yang dikembalikan
  * fungsi ini adalah yang boleh tampil. holder_did, session_id,
  * credentialStatus, issuer, issuanceDate, dan retrieved_at sengaja TIDAK
- * ikut — bukan karena disembunyikan di UI, tapi karena tidak dibawa
+ * ikut, bukan karena disembunyikan di UI, tapi karena tidak dibawa
  * sampai ke sana.
  */
 
@@ -24,18 +24,18 @@ export type DataPublik = {
   domain: string;
   terdaftar: boolean;
 
-  /** Pilar 1 — kepemilikan domain */
+  /** Pilar 1. kepemilikan domain */
   domainTerbukti: boolean;
   domainTerbuktiPada: string | null;
 
-  /** Pilar 2 — identitas pemilik */
+  /** Pilar 2. identitas pemilik */
   tingkat: TingkatPublik;
   nama: string | null;
   verificator: string | null;
   email: string | null;
   telepon: string | null;
 
-  /** Pilar 3 — sertifikat situs, dari salinan tersimpan. */
+  /** Pilar 3. sertifikat situs, dari salinan tersimpan. */
   ssl: {
     ada: boolean;
     jenisValidasi: "DV" | "OV" | null;
@@ -43,7 +43,7 @@ export type DataPublik = {
     organisasi: string | null;
   };
 
-  /** Detail sekunder — catatan registri, dari salinan tersimpan. */
+  /** Detail sekunder. catatan registri, dari salinan tersimpan. */
   rdap: {
     ada: boolean;
     tanggalRegistrasi: string | null;

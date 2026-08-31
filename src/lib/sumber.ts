@@ -3,7 +3,7 @@
  * MENYIMPANNYA ke SQLite.
  *
  * HANYA DIJALANKAN DI SERVER, dan hanya pada saat pendaftaran atau
- * penyegaran yang disengaja — tidak pernah saat halaman dibuka.
+ * penyegaran yang disengaja, tidak pernah saat halaman dibuka.
  * Halaman B akan dibuka berulang kali di depan juri dan pengunjung;
  * menembak RDAP tiap kali berarti lambat dan berisiko kena batas laju.
  */

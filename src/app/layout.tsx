@@ -37,7 +37,7 @@ export default function RootLayout({
 
         <footer className="siteFooter">
           <div className="bar">
-            cekusaha.id — dibangun untuk .id Vibe Coding 2026
+            cekusaha.id, dibangun untuk .id Vibe Coding 2026
           </div>
         </footer>
       </body>

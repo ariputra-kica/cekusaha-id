@@ -1,5 +1,5 @@
 /**
- * Basis data SQLite — satu berkas di dalam proyek.
+ * Basis data SQLite. satu berkas di dalam proyek.
  *
  * Memakai `node:sqlite`, modul bawaan Node. Tidak ada paket yang dipasang,
  * tidak ada ORM. HANYA DIJALANKAN DI SERVER.
@@ -56,7 +56,7 @@ export function ambilDb(): DatabaseSync {
       domain            TEXT NOT NULL,
       tingkat           TEXT NOT NULL,
 
-      -- INTERNAL — tidak pernah dirender di Halaman B
+      -- INTERNAL, tidak pernah dirender di Halaman B
       holder_did        TEXT NOT NULL,
       issuer            TEXT,
       issuance_date     TEXT,
@@ -65,7 +65,7 @@ export function ambilDb(): DatabaseSync {
       session_id        TEXT,
       retrieved_at      TEXT,
 
-      -- BOLEH TAMPIL — dipilih sadar, bukan semua yang kebetulan ada
+      -- BOLEH TAMPIL. dipilih sadar, bukan semua yang kebetulan ada
       email             TEXT,
       phone_number      TEXT,
       fullname          TEXT,
@@ -121,7 +121,7 @@ export function ambilDb(): DatabaseSync {
     try {
       db.exec(`ALTER TABLE domain ADD COLUMN ${k} TEXT`);
     } catch {
-      // sudah ada — abaikan
+      // sudah ada. abaikan
     }
   }
 

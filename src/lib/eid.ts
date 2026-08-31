@@ -9,7 +9,7 @@
  *
  * Penjenjangan dua tingkat dijalankan sebagai DUA sesi terpisah, karena
  * e.id menolak dua skema dalam satu Verification Schema
- * ("only single schema is currently supported" — diuji 31 Agustus 2026).
+ * ("only single schema is currently supported". diuji 31 Agustus 2026).
  * Kedua hasil disatukan lewat holder_did yang sama.
  */
 
@@ -233,7 +233,7 @@ export async function mulaiSesi(domain: string, tingkat: Tingkat): Promise<Sesi>
  * untuk domain yang sama?
  *
  * Dua tingkat verifikasi hanya boleh disatukan kalau berasal dari dompet
- * e.id yang sama. Kalau berbeda, itu bukan pemilik yang sama — dan
+ * e.id yang sama. Kalau berbeda, itu bukan pemilik yang sama, dan
  * menggabungkannya berarti menerbitkan halaman yang menyatakan sesuatu
  * yang tidak benar.
  *
@@ -262,7 +262,7 @@ function simpanStatus(sessionId: string, status: string, alasan: string | null) 
 
 /**
  * Periksa satu sesi. Kalau APPROVED, hasilnya diambil dan disimpan SEKETIKA.
- * Tidak ada jeda antara mengetahui APPROVED dan menyimpan — 300 detik itu
+ * Tidak ada jeda antara mengetahui APPROVED dan menyimpan. 300 detik itu
  * pendek, dan kalau terlewat pemilik harus memindai ulang dari awal.
  */
 export async function periksaSesi(sessionId: string): Promise<HasilPeriksa> {
@@ -276,7 +276,7 @@ export async function periksaSesi(sessionId: string): Promise<HasilPeriksa> {
     };
   }
 
-  // Sudah tersimpan sebelumnya — tidak perlu diperiksa lagi.
+  // Sudah tersimpan sebelumnya, tidak perlu diperiksa lagi.
   if (bacaIdentitas(sesi.domain, sesi.tingkat)) {
     return { sesi, selesai: true, kode: "tersimpan", pesan: "Verifikasi ini sudah tersimpan." };
   }

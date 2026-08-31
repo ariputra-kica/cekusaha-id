@@ -6,7 +6,7 @@ import { normalisasiDomain, domainMasukAkal } from "@/lib/dcv";
 /**
  * Reverse lookup dari halaman depan.
  *
- * Tidak menyentuh jaringan sama sekali — hanya merapikan masukan lalu
+ * Tidak menyentuh jaringan sama sekali, hanya merapikan masukan lalu
  * mengarahkan ke halaman verifikasi domain itu. Halaman tujuan membaca
  * dari salinan tersimpan.
  */

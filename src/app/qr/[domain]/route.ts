@@ -4,7 +4,7 @@
  * Dihasilkan sebagai SVG, bukan PNG: QR ini akan DICETAK di kemasan dan
  * etalase, dan SVG tetap tajam di ukuran berapa pun.
  *
- * Isinya alamat verifikasi lengkap, bukan tautan pendek — supaya tetap
+ * Isinya alamat verifikasi lengkap, bukan tautan pendek, supaya tetap
  * berfungsi meski layanan pemendek sedang bermasalah, dan supaya orang
  * yang melihat alamatnya tahu ke mana ia menuju.
  *
@@ -45,7 +45,7 @@ export async function GET(
     // paling andal dipindai, apalagi setelah dicetak dan sedikit kotor.
     color: "#000000",
     background: "#ffffff",
-    // Q menahan sampai 25% kerusakan — kemasan tergores atau terlipat
+    // Q menahan sampai 25% kerusakan. Kemasan tergores atau terlipat
     // masih terbaca.
     ecl: "Q",
     join: true,

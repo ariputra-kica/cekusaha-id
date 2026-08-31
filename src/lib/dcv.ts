@@ -9,7 +9,7 @@
  *   3. Aplikasi membaca TXT record itu lewat SATU kueri DNS
  *
  * Token bersifat FANA. Begitu kepemilikan terbukti, token dikosongkan dari
- * basis data — sudah tidak berguna, dan menyimpannya hanya menambah risiko.
+ * basis data, sudah tidak berguna, dan menyimpannya hanya menambah risiko.
  *
  * Alur TIDAK menunggu propagasi dalam satu tarikan napas. Status "menunggu"
  * disimpan, dan pemilik menekan "Cek ulang" kapan pun dia siap.
@@ -107,7 +107,7 @@ function catatPemeriksaan(
 /**
  * Mulai (atau lanjutkan) proses pembuktian untuk sebuah domain.
  *
- * Token TIDAK dibuat ulang bila sudah ada dan masih menunggu — kalau
+ * Token TIDAK dibuat ulang bila sudah ada dan masih menunggu. kalau
  * dibuat ulang, TXT record yang sudah terlanjur dipasang pemilik jadi
  * tidak cocok lagi.
  */
@@ -158,7 +158,7 @@ function rapikan(hasil: string[][]): string[] {
 
 /**
  * Cara lama: bertanya ke resolver perantara (bawaan sistem).
- * Dipakai hanya sebagai cadangan — jawabannya bisa berasal dari cache.
+ * Dipakai hanya sebagai cadangan. jawabannya bisa berasal dari cache.
  */
 export const bacaTxtLewatResolver: PembacaTxt = async (domain) => {
   const r = new dnsPromises.Resolver({ timeout: 5000, tries: 2 });
@@ -172,7 +172,7 @@ const JAWABAN_KOSONG = new Set(["ENODATA", "ENOTFOUND"]);
  * Cara utama: bertanya LANGSUNG ke server DNS resmi domain itu.
  *
  * Kenapa begini, bukan lewat resolver biasa: resolver perantara menyimpan
- * jawaban "tidak ada record" selama masa yang ditentukan SOA — di Cloudflare
+ * jawaban "tidak ada record" selama masa yang ditentukan SOA. di Cloudflare
  * 30 menit. Jadi kalau pemilik memasang TXT sesudah kita pernah bertanya,
  * jawabannya tetap kosong sampai setengah jam meski recordnya sudah ada.
  *
@@ -213,7 +213,7 @@ export const bacaTxtLewatDns: PembacaTxt = async (domain) => {
     return await bacaTxtDariOtoritatif(domain);
   } catch (err: any) {
     // "Tidak ada record" dari server resmi adalah jawaban FINAL, bukan
-    // kegagalan. Jangan mundur ke resolver — jawabannya cuma cache lama.
+    // kegagalan. Jangan mundur ke resolver. jawabannya cuma cache lama.
     if (JAWABAN_KOSONG.has(err?.code)) return [];
     return await bacaTxtLewatResolver(domain);
   }
@@ -246,7 +246,7 @@ export async function periksaDcv(
     };
   }
 
-  // Sudah terbukti sebelumnya — tidak perlu diperiksa lagi.
+  // Sudah terbukti sebelumnya, tidak perlu diperiksa lagi.
   if (r.dcv_status === "terbukti") {
     return { ...barisKeKeadaan(r), kode: "sudah-terbukti", pesan: "Kepemilikan sudah terbukti." };
   }
@@ -290,7 +290,7 @@ export async function periksaDcv(
     };
   }
 
-  // Terbukti. Token dikosongkan — sifatnya fana.
+  // Terbukti. Token dikosongkan. sifatnya fana.
   db.prepare(
     `UPDATE domain
         SET dcv_status = 'terbukti',

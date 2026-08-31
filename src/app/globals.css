@@ -238,7 +238,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   font-size: 0.94rem;
 }
 
-/* Kabar netral saat masih menunggu. Sengaja BUKAN merah — belum terpasang
+/* Kabar netral saat masih menunggu. Sengaja BUKAN merah, belum terpasang
    bukan kesalahan, hanya keadaan yang wajar. */
 .kabar {
   margin: 1.1rem 0 0;
@@ -311,7 +311,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   to { transform: rotate(360deg); }
 }
 
-/* Kalau pengguna meminta animasi dikurangi, cukup titik diam —
+/* Kalau pengguna meminta animasi dikurangi, cukup titik diam.
    perubahan teks tombol sudah cukup memberi tahu bahwa proses berjalan. */
 @media (prefers-reduced-motion: reduce) {
   .putar { animation: none; border-top-color: rgba(255, 255, 255, 0.7); }
@@ -319,7 +319,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 
 /* ---------- langkah verifikasi ----------
    Dibuat sebagai baris yang dipisah garis tipis, BUKAN kartu dengan ikon
-   dalam kotak pastel — sesuai arah desain di CLAUDE.md. */
+   dalam kotak pastel, sesuai arah desain di CLAUDE.md. */
 
 .langkah {
   border-top: 1px solid var(--rule);
@@ -385,12 +385,12 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 
 /* ==================================================================
-   HALAMAN B — verifikasi publik
+   HALAMAN B, verifikasi publik
 
    Dibuka lewat ponsel, sering di luar ruangan. Latar tetap terang.
 
    Susunannya sengaja terbalik dari yang biasa: PUTUSAN yang paling besar,
-   bukan nama domain. Pembeli sudah tahu domain apa yang dia buka — dia
+   bukan nama domain. Pembeli sudah tahu domain apa yang dia buka, dia
    yang mengetiknya. Yang dia cari adalah jawabannya.
 
    Tiap pilar menyatakan faktanya sebagai kalimat, bukan pasangan
@@ -410,7 +410,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 
 @media (min-width: 60rem) {
   /* Kepala melebar penuh di atas; tiga pilar berdampingan di bawahnya.
-     Pilar identitas tadinya 2,2x lebih panjang dari pilar sertifikat —
+     Pilar identitas tadinya 2,2x lebih panjang dari pilar sertifikat.
      blok kontak dikeluarkan jadi barisnya sendiri, dan selisihnya turun
      jadi 1,4x. Panjangnya tetap bergantung data, jadi tidak akan pernah
      rata sempurna. */
@@ -429,33 +429,25 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   }
 }
 
-/* Nama domain: cukup sedang. Sudah diketahui pembeli. */
-.namaDomain {
-  font-size: 1.32rem;
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.25;
-  margin: 0.15rem 0 0.55rem;
-  color: var(--ink-soft);
+/* Nama domain dan putusan adalah satu kalimat, bukan dua elemen yang
+   bersaing: "cekusaha.id, identitas pemilik terverifikasi". Keduanya
+   sebesar yang lain; yang membedakan hanya warnanya. */
+.putusanGabung {
+  font-size: clamp(1.6rem, 5.6vw, 2.35rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.14;
+  text-wrap: balance;
+  margin: 0.15rem 0 0;
+  max-width: 26ch;
   overflow-wrap: anywhere;
 }
-
-/* Putusan: elemen terbesar di halaman. Inilah yang dicari pembeli. */
-.putusan {
-  font-size: clamp(1.75rem, 6.2vw, 2.45rem);
-  font-weight: 700;
-  letter-spacing: -0.032em;
-  line-height: 1.08;
-  text-wrap: balance;
-  margin: 0;
-  max-width: 17ch;
-}
-.putusan--terbukti { color: var(--verified); }
-.putusan--netral   { color: var(--muted); }
+.putusanDomain { color: var(--ink); }
+.putusanStatus--terbukti { color: var(--verified); }
+.putusanStatus--netral   { color: var(--muted); }
 
 @media (min-width: 60rem) {
-  .putusan { font-size: 3rem; max-width: 20ch; }
-  .namaDomain { font-size: 1.35rem; }
+  .putusanGabung { font-size: 2.6rem; max-width: 30ch; }
 }
 
 .putusanKeterangan {
@@ -542,12 +534,16 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 .kontakBaris {
   margin: 0;
-  font-size: 1.05rem;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.15rem 0.55rem;
+  gap: 0.6rem 3rem;
 }
+.kontakBaris dt {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 0.1rem;
+}
+.kontakBaris dd { margin: 0; font-size: 1.02rem; }
 .kontakNilai {
   font-weight: 500;
   text-decoration-thickness: 1px;
@@ -582,7 +578,35 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   max-width: 48ch;
 }
 
-/* ---------- penutup ---------- */
+/* ---------- bagian bawah: tiga blok berdampingan ---------- */
+
+.kakiB {
+  margin-top: 1.9rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  gap: 1.4rem 2.75rem;
+}
+@media (min-width: 60rem) {
+  .kakiB { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.kakiB h2 {
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+.kakiB p {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.kakiB p:last-child { margin-bottom: 0; }
+
+/* ---------- penutup halaman "belum terdaftar" ---------- */
 
 .penutupB {
   margin-top: 2.1rem;
@@ -599,7 +623,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .penutupB p:last-child { margin-bottom: 0; }
 
 /* ==================================================================
-   BERANDA — kotak reverse lookup
+   BERANDA, kotak reverse lookup
 
    Tidak ada landing terpisah. Pengunjung langsung melihat gunanya,
    dan pertahanan anti-transplantasi jadi wajah depan.
@@ -623,7 +647,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   margin: 0;
 }
 
-/* Kotak periksa dibuat lebih besar dari formulir biasa — ini pekerjaan
+/* Kotak periksa dibuat lebih besar dari formulir biasa, ini pekerjaan
    utama halaman, bukan pelengkap. */
 .formCari { margin-top: 1.7rem; max-width: 34rem; }
 .formCari input[type="text"] {
@@ -701,10 +725,21 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 
 /* ==================================================================
-   HALAMAN A — hasil pemilik, privat
+   HALAMAN A, hasil pemilik, privat
    ================================================================== */
 
 .halamanA { max-width: 76rem; }
+
+/* Peringatan privasi. Ditaruh di atas dekat labelnya, bukan sebagai
+   catatan kaki: yang membacanya belakangan sudah terlanjur membagikan. */
+.peringatanPrivat {
+  margin: 0.1rem 0 0.7rem;
+  padding-left: 0.7rem;
+  border-left: 3px solid var(--accent);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
 
 .hasilJudul {
   font-size: clamp(1.6rem, 5vw, 2.1rem);
@@ -740,7 +775,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 
 /* ---------- tiga aset ---------- */
 
-/* Tiga aset adalah pilihan yang SEJAJAR — QR, tautan pendek, dan seal
+/* Tiga aset adalah pilihan yang SEJAJAR, QR, tautan pendek, dan seal
    sama pentingnya, tinggal pemilik memilih mana yang dipakai di mana.
    Berdampingan menyampaikan itu; bertumpuk vertikal terbaca seperti
    urutan langkah. */
@@ -752,17 +787,22 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 
 @media (min-width: 62rem) {
+  /* Lebar mengikuti isi, bukan dibagi rata. Tautan pendek isinya satu
+     baris; QR dan seal butuh ruang. Dibagi rata hanya menyisakan lubang
+     di kolom tengah. */
   .aset {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.72fr) minmax(0, 1.3fr);
     column-gap: 2.5rem;
-    align-items: start;
+    /* stretch, bukan start: garis pemisah tegak harus sama panjang di
+       ketiga kolom, dan itu hanya terjadi kalau tingginya disamakan. */
+    align-items: stretch;
+    border-bottom: 1px solid var(--rule);
   }
   .asetBaris {
     padding: 1.5rem 0 1.7rem;
     border-bottom: none;
   }
-  /* Garis pemisah jadi tegak, mengikuti arah susunannya. */
   .asetBaris + .asetBaris {
     border-left: 1px solid var(--rule);
     padding-left: 2.5rem;
@@ -828,13 +868,15 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .asetKotak--kode { display: block; padding: 0; overflow: hidden; }
 .asetKotak--kode pre {
   margin: 0;
-  padding: 0.85rem;
-  /* Membungkus, bukan terpotong: kolomnya sempit dan kode yang
-     terpotong di kanan tidak bisa disalin dengan mata. */
+  padding: 0.8rem;
+  /* Membungkus di batas kata, BUKAN di tengah kata. "anywhere" memotong
+     alamat jadi "cekusaha.i" lalu "d" di baris berikutnya, dan pemilik
+     tidak bisa membaca alamat yang benar. */
   white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  word-break: normal;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.8rem;
+  font-size: 0.76rem;
   line-height: 1.55;
   color: var(--ink-soft);
 }

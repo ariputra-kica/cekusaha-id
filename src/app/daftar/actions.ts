@@ -59,7 +59,7 @@ export async function aksiMulaiEid(formData: FormData) {
 
 /**
  * Periksa sesi. Kalau sudah disetujui, hasilnya langsung tersimpan di
- * dalam periksaSesi() — tidak ada jeda, karena batasnya 300 detik.
+ * dalam periksaSesi(). Tidak ada jeda, karena batasnya 300 detik.
  */
 export async function aksiPeriksaEid(formData: FormData) {
   const domain = normalisasiDomain(String(formData.get("domain") || ""));

@@ -7,7 +7,7 @@ import TombolKirim from "../../daftar/TombolKirim";
 const ALAMAT = (process.env.APP_BASE_URL || "https://cekusaha.id").replace(/\/+$/, "");
 
 export const metadata = {
-  title: "Hasil pendaftaran — cekusaha.id",
+  title: "Hasil pendaftaran cekusaha.id",
   robots: { index: false, follow: false },
 };
 
@@ -22,11 +22,12 @@ export default async function HasilPemilik({
 
   const tautanVerifikasi = alamatVerifikasi(d.domain);
   const tautanSeal = `${ALAMAT}/seal/${encodeURIComponent(d.domain)}`;
+  // Baris sengaja dibuat pendek supaya muat di kolomnya tanpa terpotong
+  // di tengah kata. Atribut target dan rel dilepas karena tidak wajib.
   const kodeSemat =
-    `<a href="${tautanVerifikasi}" target="_blank" rel="noopener">\n` +
+    `<a href="${tautanVerifikasi}">\n` +
     `  <img src="${tautanSeal}"\n` +
-    `       alt="${d.domain} terverifikasi di cekusaha.id"\n` +
-    `       height="62">\n` +
+    `       alt="Terverifikasi di cekusaha.id" height="62">\n` +
     `</a>`;
 
   if (!d.terdaftar || !d.domainTerbukti) {
@@ -49,7 +50,10 @@ export default async function HasilPemilik({
 
   return (
     <div className="halamanA">
-      <p className="eyebrow">Halaman pemilik — jangan dibagikan</p>
+      <p className="eyebrow">Halaman pemilik</p>
+      <p className="peringatanPrivat">
+        Jangan dibagikan. Siapa pun yang tahu alamat ini bisa membukanya.
+      </p>
       <h1 className="hasilJudul">{d.domain}</h1>
       <p className="lead">
         Pendaftaran selesai. Tiga aset di bawah ini semuanya menuju halaman
@@ -121,7 +125,7 @@ export default async function HasilPemilik({
               <div className="asetKotak asetKotak--tunggu">
                 <p>
                   {aset.sidGalat
-                    ? "Tautan pendek belum berhasil dibuat. Coba lagi, atau lewati saja — aset lain tetap berfungsi."
+                    ? "Tautan pendek belum berhasil dibuat. Coba lagi, atau lewati saja. Aset lain tetap berfungsi."
                     : "Tautan pendek belum dibuat."}
                 </p>
               </div>
@@ -141,7 +145,7 @@ export default async function HasilPemilik({
         <section className="asetBaris">
           <h2 className="asetLabel">Seal untuk situs Anda</h2>
           <p className="asetGuna">
-            Tempel kode ini di situs Anda — tanpa skrip apa pun.
+            Tempel kode ini di situs Anda. Tidak ada skrip yang perlu dipasang.
           </p>
 
           <p className="pratinjauSeal">
@@ -160,10 +164,6 @@ export default async function HasilPemilik({
         </section>
       </div>
 
-      <p className="note">
-        Halaman ini tidak terdaftar di mesin pencari, tapi siapa pun yang tahu
-        alamatnya bisa membukanya. Jangan dibagikan.
-      </p>
     </div>
   );
 }

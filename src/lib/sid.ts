@@ -8,7 +8,7 @@
  * dan tidak pernah memanggil s.id lagi.
  *
  * Kegagalan membuat tautan TIDAK boleh menghalangi apa pun. Tautan pendek
- * adalah kenyamanan, bukan bukti — halaman verifikasi tetap bisa dibuka
+ * adalah kenyamanan, bukan bukti. halaman verifikasi tetap bisa dibuka
  * lewat alamat panjangnya.
  */
 
@@ -111,7 +111,7 @@ export async function pastikanTautanPendek(domain: string): Promise<Aset> {
     let h = await coba(slug);
     let slugDipakai = slug;
 
-    // Slug bentrok — nama domain ini sudah dipakai orang lain di s.id, atau
+    // Slug bentrok. nama domain ini sudah dipakai orang lain di s.id, atau
     // sisa percobaan sebelumnya. Coba sekali lagi dengan akhiran acak
     // daripada membiarkan pendaftaran gagal karena hal sepele.
     if (!h.url && h.pesan === "short_already_exist") {

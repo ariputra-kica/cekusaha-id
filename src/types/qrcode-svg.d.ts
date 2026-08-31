@@ -1,5 +1,5 @@
 /**
- * Deklarasi tipe seadanya untuk qrcode-svg — paket itu tidak membawa
+ * Deklarasi tipe seadanya untuk qrcode-svg, paket itu tidak membawa
  * tipenya sendiri. Sesuai catatan di CLAUDE.md, tipe dilonggarkan saja
  * daripada menghabiskan waktu memuaskan compiler.
  */

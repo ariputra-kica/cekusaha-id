@@ -14,7 +14,7 @@ export default async function Beranda({
       <h1 className="berandaJudul">Siapa yang berdiri di balik domain ini?</h1>
       <p className="berandaLead">
         Masukkan alamat domain .id untuk melihat apa yang sudah dibuktikan
-        pemiliknya — kendali atas domain, identitas terverifikasi, dan
+        pemiliknya: kendali atas domain, identitas terverifikasi, dan
         sertifikat situsnya.
       </p>
 
@@ -65,16 +65,16 @@ export default async function Beranda({
         <h2>Apa yang diperiksa</h2>
         <ul>
           <li>
-            <strong>Kepemilikan domain</strong> — pemilik memasang catatan DNS
+            <strong>Kepemilikan domain.</strong> Pemilik memasang catatan DNS
             yang kami minta. Hanya orang yang mengendalikan domain yang bisa
             melakukannya.
           </li>
           <li>
-            <strong>Identitas pemilik</strong> — kontak atau identitas
+            <strong>Identitas pemilik.</strong> Kontak atau identitas
             perorangan, dibuktikan lewat kredensial e.id miliknya sendiri.
           </li>
           <li>
-            <strong>Sertifikat situs</strong> — jenis validasi dan penerbitnya,
+            <strong>Sertifikat situs.</strong> Jenis validasi dan penerbitnya,
             dibaca langsung dari sertifikat situs itu.
           </li>
         </ul>

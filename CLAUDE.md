@@ -163,6 +163,14 @@ Tujuan: jangan terlihat seperti template default keluaran AI. Semua peserta mema
 
 ---
 
+## Gaya menulis
+
+**Minimalkan em dash (—).** Kalau muncul di hampir setiap paragraf, ia berhenti menandai apa pun dan hanya jadi kebiasaan. Ganti dengan titik, koma, titik dua, atau susun ulang kalimatnya. Sisakan hanya kalau benar-benar tidak ada cara lain menyusunnya.
+
+Aturan ini berlaku untuk **semua teks**: antarmuka aplikasi, pesan commit, komentar dalam kode, dan jawaban di percakapan.
+
+---
+
 ## Aturan UI — tidak boleh dilanggar
 
 Ini bukan preferensi desain. Melanggarnya merusak inti produk.

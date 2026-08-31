@@ -9,7 +9,7 @@
  * "Terverifikasi" tanpa kualifikasi untuk tingkat Kontak berarti
  * menyatakan lebih dari yang dibuktikan.
  *
- * Domain yang belum terbukti tidak punya seal sama sekali — bukan seal
+ * Domain yang belum terbukti tidak punya seal sama sekali. Bukan seal
  * kosong, bukan seal "belum". Gambar yang tidak ada tidak bisa dipalsukan.
  */
 
@@ -51,7 +51,7 @@ export async function GET(
   const huruf =
     "system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${lebar}" height="${tinggi}" viewBox="0 0 ${lebar} ${tinggi}" role="img" aria-label="${lolos(d.domain)} — ${lolos(tingkat)} di cekusaha.id">
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${lebar}" height="${tinggi}" viewBox="0 0 ${lebar} ${tinggi}" role="img" aria-label="${lolos(d.domain)}, ${lolos(tingkat)} di cekusaha.id">
   <rect width="${lebar}" height="${tinggi}" rx="3" fill="#1b2733"/>
   <circle cx="17" cy="23" r="3.5" fill="#4fb489"/>
   <text x="28" y="26.5" font-family="${huruf}" font-size="9.5" font-weight="600" letter-spacing="1.05" fill="#7cc9a8">${lolos(tingkat)}</text>

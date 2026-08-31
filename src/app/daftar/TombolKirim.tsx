@@ -3,7 +3,7 @@
 /**
  * Tombol kirim yang menunjukkan dirinya sedang bekerja.
  *
- * useFormStatus berasal dari react-dom — bawaan React, bukan paket baru.
+ * useFormStatus berasal dari react-dom, bawaan React, bukan paket baru.
  * Komponen ini harus berada DI DALAM <form>, bukan yang merender form-nya,
  * supaya statusnya terbaca.
  */

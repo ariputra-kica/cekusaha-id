@@ -1,5 +1,5 @@
 /**
- * Perapian tampilan. Tidak mengubah data tersimpan — hanya cara
+ * Perapian tampilan. Tidak mengubah data tersimpan. hanya cara
  * menuliskannya di layar.
  *
  * Nilai aslinya tetap utuh di basis data. Kalau bentuk masukan tidak
@@ -35,7 +35,7 @@ export function rapikanTelepon(nomor: string | null): string | null {
  * Nama yang datang HURUF KAPITAL SEMUA dari e.id ditulis ulang dengan
  * kapitalisasi biasa, supaya tidak terbaca seperti berteriak.
  *
- * Nama yang sudah bercampur huruf besar-kecil TIDAK disentuh — pemiliknya
+ * Nama yang sudah bercampur huruf besar-kecil TIDAK disentuh. pemiliknya
  * mungkin memang menulisnya begitu.
  */
 export function rapikanNama(nama: string | null): string | null {

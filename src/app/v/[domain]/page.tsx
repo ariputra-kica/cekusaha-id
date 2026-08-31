@@ -32,7 +32,7 @@ export async function generateMetadata({
   const { domain } = await params;
   const nama = decodeURIComponent(domain);
   return {
-    title: `${nama} — verifikasi cekusaha.id`,
+    title: `Verifikasi ${nama} di cekusaha.id`,
     description: `Apa yang sudah dibuktikan tentang ${nama}, dan apa yang belum.`,
   };
 }
@@ -53,13 +53,15 @@ export default async function VerifikasiPublik({
       <article className="halamanB halamanB--kosong">
         <header className="kepalaB">
           <p className="eyebrow">Halaman verifikasi</p>
-          <h1 className="namaDomain">{d.domain}</h1>
-          <p className="putusan putusan--netral">
-            Belum terverifikasi di cekusaha.id
-          </p>
+          <h1 className="putusanGabung">
+            <span className="putusanDomain">{d.domain}</span>,{" "}
+            <span className="putusanStatus putusanStatus--netral">
+              belum terverifikasi di cekusaha.id
+            </span>
+          </h1>
           <p className="putusanKeterangan">
             Kami belum punya catatan verifikasi untuk domain ini. Itu bukan
-            tanda ada yang salah — sebagian besar domain memang belum
+            tanda ada yang salah. Sebagian besar domain memang belum
             mendaftar.
           </p>
         </header>
@@ -78,17 +80,21 @@ export default async function VerifikasiPublik({
 
   const putusan =
     d.tingkat === "identitas"
-      ? "Identitas pemilik terverifikasi"
+      ? "identitas pemilik terverifikasi"
       : d.tingkat === "kontak"
-        ? "Kontak pemilik terverifikasi"
-        : "Kepemilikan domain terbukti";
+        ? "kontak pemilik terverifikasi"
+        : "kepemilikan domain terbukti";
 
   return (
     <article className="halamanB">
       <header className="kepalaB">
         <p className="eyebrow">Halaman verifikasi</p>
-        <h1 className="namaDomain">{d.domain}</h1>
-        <p className="putusan putusan--terbukti">{putusan}</p>
+        <h1 className="putusanGabung">
+          <span className="putusanDomain">{d.domain}</span>,{" "}
+          <span className="putusanStatus putusanStatus--terbukti">
+            {putusan}
+          </span>
+        </h1>
       </header>
 
       {/* ---------- Tiga pilar ----------
@@ -148,7 +154,7 @@ export default async function VerifikasiPublik({
 
         </section>
 
-        {/* Pilar 3 — DV dan OV diberi bobot yang sama. Ketiadaan nama
+        {/* Pilar 3. DV dan OV diberi bobot yang sama. Ketiadaan nama
             organisasi bukan sinyal negatif. Penerbit sebagai teks, tanpa logo. */}
         <section className="pilarBaris">
           <h2 className="pilarLabel">Sertifikat situs</h2>
@@ -182,22 +188,31 @@ export default async function VerifikasiPublik({
       {(d.email || d.telepon) && (
         <section className="kontakUsaha">
           <h2 className="kontakLabel">Kontak usaha yang terverifikasi</h2>
-          <p className="kontakBaris">
+          <dl className="kontakBaris">
             {d.email && (
-              <a href={`mailto:${d.email}`} className="kontakNilai">
-                {d.email}
-              </a>
+              <div>
+                <dt>Email</dt>
+                <dd>
+                  <a href={`mailto:${d.email}`} className="kontakNilai">
+                    {d.email}
+                  </a>
+                </dd>
+              </div>
             )}
-            {d.email && d.telepon && <span className="pemisah">·</span>}
             {d.telepon && (
-              <a
-                href={`tel:${d.telepon.replace(/[^\d+]/g, "")}`}
-                className="kontakNilai"
-              >
-                {rapikanTelepon(d.telepon)}
-              </a>
+              <div>
+                <dt>Telepon</dt>
+                <dd>
+                  <a
+                    href={`tel:${d.telepon.replace(/[^\d+]/g, "")}`}
+                    className="kontakNilai"
+                  >
+                    {rapikanTelepon(d.telepon)}
+                  </a>
+                </dd>
+              </div>
             )}
-          </p>
+          </dl>
           <p className="kontakAjakan">
             Cocokkan dengan kontak yang tertera di toko. Kalau berbeda,
             berhati-hatilah.
@@ -205,32 +220,51 @@ export default async function VerifikasiPublik({
         </section>
       )}
 
-      {/* ---------- Detail sekunder, sengaja kalem ---------- */}
-      <section className="sekunder">
-        <h2>Catatan pendaftaran domain</h2>
-        {d.rdap.ada && (d.rdap.tanggalRegistrasi || d.rdap.registrar) ? (
-          <p className="sekunderIsi">
-            {d.rdap.tanggalRegistrasi
-              ? `Terdaftar sejak ${tanggal(d.rdap.tanggalRegistrasi)}`
-              : "Terdaftar"}
-            {d.rdap.registrar ? ` melalui ${d.rdap.registrar}` : ""}. Registrar
-            adalah penyedia jasa pendaftaran domain, bukan pemilik domain.
-          </p>
-        ) : (
-          <p className="sekunderIsi">
-            Catatan registri belum tersimpan untuk domain ini.
-          </p>
-        )}
-      </section>
+      {/* ---------- Bagian bawah ----------
+          Tiga blok berdampingan supaya lebar yang tersedia terpakai,
+          bukan menumpuk ke bawah sambil menyisakan ruang kosong di kanan. */}
+      <footer className="kakiB">
+        <section>
+          <h2>Catatan pendaftaran domain</h2>
+          {d.rdap.ada && (d.rdap.tanggalRegistrasi || d.rdap.registrar) ? (
+            <p>
+              {d.rdap.tanggalRegistrasi
+                ? `Terdaftar sejak ${tanggal(d.rdap.tanggalRegistrasi)}`
+                : "Terdaftar"}
+              {d.rdap.registrar ? ` melalui ${d.rdap.registrar}` : ""}.
+              Registrar adalah penyedia jasa pendaftaran domain, bukan
+              pemilik domain.
+            </p>
+          ) : (
+            <p>Catatan registri belum tersimpan untuk domain ini.</p>
+          )}
+        </section>
 
-      <p className="waktuPeriksa">
-        Seluruh data di halaman ini berasal dari salinan tersimpan.
-        {d.diperiksaTerakhir
-          ? ` Pemeriksaan terakhir ${tanggalJam(d.diperiksaTerakhir)}.`
-          : ""}
-      </p>
+        <section>
+          <h2>Asal data</h2>
+          <p>
+            Setiap pernyataan di halaman ini berasal dari pemeriksaan yang
+            bisa ditunjuk sumbernya: catatan DNS untuk kepemilikan domain,
+            kredensial e.id untuk identitas, dan sertifikat situs untuk
+            enkripsi. Kami tidak menampilkan apa pun yang tidak kami periksa
+            sendiri.
+          </p>
+        </section>
 
-      <Penutup />
+        <section>
+          <h2>Pemeriksaan dan pelaporan</h2>
+          <p>
+            Seluruh data berasal dari salinan tersimpan.
+            {d.diperiksaTerakhir
+              ? ` Pemeriksaan terakhir ${tanggalJam(d.diperiksaTerakhir)}.`
+              : ""}
+          </p>
+          <p>
+            Menemukan penyalahgunaan halaman ini?{" "}
+            <a href={`mailto:${KONTAK_LAPORAN}`}>Laporkan kepada kami</a>.
+          </p>
+        </section>
+      </footer>
     </article>
   );
 }

@@ -13,7 +13,7 @@ const PESAN_EID: Record<string, string> = {
   ditolak: "Anda menolak berbagi data. Mulai lagi kalau berubah pikiran.",
   kedaluwarsa: "Sesi ini sudah kedaluwarsa. Mulai lagi dari awal.",
   hilang:
-    "Persetujuan Anda diterima, tapi datanya kedaluwarsa sebelum sempat kami ambil — batasnya lima menit. Mohon ulangi.",
+    "Persetujuan Anda diterima, tapi datanya kedaluwarsa sebelum sempat kami ambil. Batasnya lima menit. Mohon ulangi.",
   "orang-berbeda":
     "Identitas ini berasal dari dompet e.id yang berbeda dengan yang sudah terdaftar untuk domain ini. Gunakan dompet yang sama.",
   "gagal-mulai": "Tidak bisa memulai sesi verifikasi. Coba sebentar lagi.",
@@ -39,7 +39,7 @@ function waktuLokal(iso: string | null) {
   });
 }
 
-/** Jam lengkap dengan detik — supaya tiap klik terlihat menghasilkan sesuatu. */
+/** Jam lengkap dengan detik, supaya tiap klik terlihat menghasilkan sesuatu. */
 function jamLengkap(iso: string | null) {
   if (!iso) return null;
   return new Date(iso).toLocaleTimeString("id-ID", {
@@ -61,7 +61,7 @@ function SesiBerjalan({
     <>
       <p className="langkahIsi">
         Buka tautan ini di ponsel Anda. Aplikasi e.id akan menampilkan data apa
-        saja yang kami minta — {SKEMA[sesi.tingkat].mintaManusia} — lalu Anda yang
+        saja yang kami minta: {SKEMA[sesi.tingkat].mintaManusia}. Anda yang
         memutuskan menyetujui atau menolak.
       </p>
 
@@ -99,11 +99,11 @@ export default async function Pendaftaran({
   if (!keadaan) {
     return (
       <>
-        <p className="eyebrow">Untuk pemilik usaha — langkah 1 dari 4</p>
+        <p className="eyebrow">Untuk pemilik usaha, langkah 1 dari 4</p>
         <h1>Buktikan domain ini milik Anda</h1>
         <p className="lead">
           Kami menerbitkan satu kode unik. Anda memasangnya di pengaturan DNS
-          domain Anda. Setelah itu kami memeriksanya — dan hanya orang yang
+          domain Anda. Setelah itu kami memeriksanya. Hanya orang yang
           benar-benar mengendalikan domain yang bisa melakukannya.
         </p>
 
@@ -233,7 +233,7 @@ export default async function Pendaftaran({
           ) : !kontak ? (
             <p className="langkahIsi">
               Selesaikan verifikasi kontak lebih dulu. Kepercayaan dibangun
-              bertahap — Anda tidak harus menyerahkan semuanya sekaligus.
+              bertahap. Anda tidak harus menyerahkan semuanya sekaligus.
             </p>
           ) : sesiDiri ? (
             <SesiBerjalan domain={keadaan.domain} sesi={sesiDiri} />
@@ -242,7 +242,7 @@ export default async function Pendaftaran({
               <p className="langkahIsi">
                 Naikkan tingkatnya dengan membuktikan identitas Anda lewat
                 lembaga sertifikasi elektronik. Kami hanya meminta{" "}
-                <strong>nama</strong> dan <strong>nama lembaga pemeriksanya</strong> —
+                <strong>nama</strong> dan <strong>nama lembaga pemeriksanya</strong>.
                 NIK dan tanggal lahir tidak diminta dan tidak pernah sampai ke
                 kami.
               </p>
@@ -271,7 +271,7 @@ export default async function Pendaftaran({
   /* ---------- Menunggu ---------- */
   return (
     <>
-      <p className="eyebrow">Untuk pemilik usaha — langkah 1 dari 4</p>
+      <p className="eyebrow">Untuk pemilik usaha, langkah 1 dari 4</p>
       <h1>{keadaan.domain}</h1>
 
       <p className="statusBaris">
@@ -279,7 +279,7 @@ export default async function Pendaftaran({
       </p>
 
       <p className="lead">
-        Tambahkan satu TXT record berikut di pengaturan DNS domain Anda —
+        Tambahkan satu TXT record berikut di pengaturan DNS domain Anda,
         biasanya di panel tempat Anda membeli domain.
       </p>
 
@@ -305,7 +305,7 @@ export default async function Pendaftaran({
 
       <p className="lanjut">
         Setelah disimpan, tekan tombol di bawah. Perubahan DNS tidak langsung
-        menyebar — kalau belum terbaca, tunggu beberapa menit lalu coba lagi.
+        menyebar. Kalau belum terbaca, tunggu beberapa menit lalu coba lagi.
         Halaman ini tidak akan hilang.
       </p>
 
@@ -346,7 +346,7 @@ export default async function Pendaftaran({
 
       <p className="note">
         Kami bertanya langsung ke server DNS resmi domain Anda, bukan lewat
-        perantara — jadi hasilnya selalu yang terbaru.{" "}
+        perantara, jadi hasilnya selalu yang terbaru.{" "}
         <a href="/daftar">Daftarkan domain lain</a>
       </p>
     </>
