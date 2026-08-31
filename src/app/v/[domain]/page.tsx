@@ -50,7 +50,7 @@ export default async function VerifikasiPublik({
      menyiratkan kecurigaan berarti memfitnah usaha yang jujur. */
   if (!d.terdaftar) {
     return (
-      <article className="halamanB">
+      <article className="halamanB halamanB--kosong">
         <header className="kepalaB">
           <p className="eyebrow">Halaman verifikasi</p>
           <h1 className="namaDomain">{d.domain}</h1>

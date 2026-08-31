@@ -397,12 +397,50 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
    label-nilai. Halaman ini berbicara, bukan menampilkan isi basis data.
    ================================================================== */
 
-.halamanB {
-  max-width: 40rem;   /* dibatasi supaya nyaman dibaca di layar lebar */
-  margin: 0 auto;
-}
+/* Satu kolom di ponsel. Di layar lebar dipecah dua: putusan berdiri
+   sendiri di kiri, bukti bertumpuk di kanan.
+
+   Sebelumnya .halamanB dibatasi 40rem lalu dipusatkan DI DALAM .page yang
+   60rem, sehingga tepi kirinya masuk 160px dan tidak lurus dengan kepala
+   halaman. Sekarang keduanya memakai wadah yang sama, jadi tepi kirinya
+   sejajar. */
+.halamanB { margin: 0; }
 
 .kepalaB { padding-bottom: 1.9rem; }
+
+@media (min-width: 60rem) {
+  .halamanB {
+    display: grid;
+    grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
+    column-gap: 3.5rem;
+    align-items: start;
+  }
+
+  /* Kepala menempati seluruh tinggi kolom kiri supaya putusannya ikut
+     terlihat selama pembaca menelusuri buktinya. */
+  .kepalaB {
+    grid-column: 1;
+    grid-row: 1 / -1;
+    align-self: start;
+    position: sticky;
+    top: 2rem;
+    padding-bottom: 0;
+  }
+
+  .halamanB > .pilar,
+  .halamanB > .sekunder,
+  .halamanB > .waktuPeriksa,
+  .halamanB > .penutupB,
+  .halamanB > .ajakan { grid-column: 2; }
+
+  .halamanB > .pilar { margin-top: 0.35rem; }
+
+  /* Halaman "belum terdaftar" tidak punya bukti untuk kolom kanan.
+     Dipecah dua hanya akan menjepit keterangannya di kolom sempit. */
+  .halamanB--kosong { display: block; }
+  .halamanB--kosong .kepalaB { position: static; padding-bottom: 0; }
+  .halamanB--kosong .putusan { max-width: 20ch; }
+}
 
 /* Nama domain: cukup sedang. Sudah diketahui pembeli. */
 .namaDomain {
@@ -417,7 +455,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 
 /* Putusan: elemen terbesar di halaman. Inilah yang dicari pembeli. */
 .putusan {
-  font-size: clamp(1.75rem, 6.2vw, 2.6rem);
+  font-size: clamp(1.75rem, 6.2vw, 2.45rem);
   font-weight: 700;
   letter-spacing: -0.032em;
   line-height: 1.08;
@@ -427,6 +465,11 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 .putusan--terbukti { color: var(--verified); }
 .putusan--netral   { color: var(--muted); }
+
+@media (min-width: 60rem) {
+  .putusan { font-size: 2.35rem; max-width: 12ch; }
+  .namaDomain { font-size: 1.22rem; }
+}
 
 .putusanKeterangan {
   margin: 0.85rem 0 0;
@@ -468,7 +511,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   letter-spacing: -0.012em;
   line-height: 1.4;
   color: var(--ink);
-  max-width: 42ch;
+  max-width: 48ch;
   text-wrap: pretty;
 }
 /* Keadaan "belum" memakai abu netral, BUKAN merah. Belum mendaftar
