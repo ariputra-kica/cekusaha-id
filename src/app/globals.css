@@ -690,3 +690,143 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   font-size: 0.95rem;
   color: var(--ink-soft);
 }
+
+/* ==================================================================
+   HALAMAN A — hasil pemilik, privat
+   ================================================================== */
+
+.halamanA { max-width: 44rem; }
+
+.hasilJudul {
+  font-size: clamp(1.6rem, 5vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0.15rem 0 0.6rem;
+  overflow-wrap: anywhere;
+}
+
+.tautanUtama { margin: 1.3rem 0 0; font-size: 0.98rem; font-weight: 500; }
+
+/* Ajakan naik tingkat. Hanya di sini, tidak pernah di halaman publik. */
+.naikTingkat {
+  margin: 2rem 0 0;
+  padding: 1.1rem 1.25rem;
+  background: var(--surface);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  max-width: 52ch;
+}
+.naikTingkat h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem;
+}
+.naikTingkat p {
+  margin: 0;
+  font-size: 0.93rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.naikTingkatAksi { margin-top: 0.7rem !important; font-weight: 500; }
+
+/* ---------- tiga aset ---------- */
+
+.aset { margin-top: 2.2rem; border-top: 1px solid var(--ink); }
+
+.asetBaris {
+  border-bottom: 1px solid var(--rule);
+  padding: 1.5rem 0;
+}
+
+.asetLabel {
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.35rem;
+}
+
+.asetGuna {
+  margin: 0 0 0.9rem;
+  font-size: 1.02rem;
+  font-weight: 500;
+  color: var(--ink);
+  max-width: 48ch;
+}
+
+.asetKotak {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 0.7rem 0.85rem;
+  margin-bottom: 0.55rem;
+}
+.asetKotak--sunyi { background: var(--paper); }
+.asetKotak--tunggu {
+  display: block;
+  background: var(--pending-bg);
+  border-color: transparent;
+  border-left: 3px solid var(--pending);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.asetKotak--tunggu p {
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.asetKotak--tunggu p:last-child { margin-bottom: 0; }
+
+.asetNilai {
+  flex: 1 1 16rem;
+  min-width: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86rem;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.asetKotak--kode { display: block; padding: 0; overflow: hidden; }
+.asetKotak--kode pre {
+  margin: 0;
+  padding: 0.85rem;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+.asetKotak--kode .tombolSalin {
+  margin: 0 0.85rem 0.85rem;
+}
+
+.tombolSalin {
+  font: inherit;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.32rem 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tombolSalin:hover { background: var(--accent); color: #ffffff; }
+
+.asetKecil {
+  margin: 0 0 0.55rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: 50ch;
+}
+
+.pratinjauSeal { margin: 0 0 0.9rem; }
+.pratinjauSeal img { display: block; max-width: 100%; height: auto; }

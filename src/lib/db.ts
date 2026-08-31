@@ -102,6 +102,20 @@ export function ambilDb(): DatabaseSync {
     );
   `);
 
+  db.exec(`
+    -- Aset siap pakai milik pemilik: tautan pendek s.id.
+    -- Dibuat SEKALI saat pendaftaran lalu disimpan. Batas s.id 38
+    -- permintaan per menit, jadi jangan pernah memanggil ulang tiap
+    -- halaman dibuka.
+    CREATE TABLE IF NOT EXISTS aset (
+      domain      TEXT PRIMARY KEY,
+      sid_url     TEXT,
+      sid_slug    TEXT,
+      sid_dibuat  TEXT,
+      sid_galat   TEXT
+    );
+  `);
+
   // Tambahkan kolom baru pada basis data yang sudah terlanjur dibuat.
   for (const k of ["dcv_kode_terakhir", "dcv_txt_terbaca"]) {
     try {
