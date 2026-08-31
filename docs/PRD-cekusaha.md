@@ -213,7 +213,7 @@ Nama field di kolom terakhir persis seperti yang muncul di dalam `credentialSubj
 
 | Sumber | Kredensial | Status |
 |---|---|---|
-| RDAP PANDI | Tidak perlu | Terverifikasi dapat dipanggil |
-| Sertifikat SSL | Tidak perlu | Dibaca langsung dari koneksi TLS |
-| e.id Verifier API | ClientID + Client Secret | Dibagikan pada hari pelaksanaan |
-| s.id API | API key self-serve | Sudah diperoleh |
+| RDAP PANDI | Tidak perlu | Terpakai di produksi. Tanggal registrasi dan registrar tersimpan sekali saat kepemilikan terbukti |
+| Sertifikat SSL | Tidak perlu | Terpakai di produksi. DV dan OV sama-sama sudah terbaca benar dari koneksi TLS |
+| e.id Verifier API | ClientID + Client Secret | Terpakai di produksi di `gateway.e.id`. Kedua tingkat sudah terbukti lewat dompet sungguhan |
+| s.id API | API key self-serve | Terpakai di produksi. Tautan dibuat sekali saat penerbitan lalu disimpan |
