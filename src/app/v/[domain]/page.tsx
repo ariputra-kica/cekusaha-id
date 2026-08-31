@@ -146,30 +146,6 @@ export default async function VerifikasiPublik({
             </p>
           )}
 
-          {(d.email || d.telepon) && (
-            <div className="kontakUsaha">
-              <p className="kontakBaris">
-                {d.email && (
-                  <a href={`mailto:${d.email}`} className="kontakNilai">
-                    {d.email}
-                  </a>
-                )}
-                {d.email && d.telepon && <span className="pemisah">·</span>}
-                {d.telepon && (
-                  <a
-                    href={`tel:${d.telepon.replace(/[^\d+]/g, "")}`}
-                    className="kontakNilai"
-                  >
-                    {rapikanTelepon(d.telepon)}
-                  </a>
-                )}
-              </p>
-              <p className="pilarCatatan">
-                Cocokkan kontak ini dengan yang tertera di toko. Kalau berbeda,
-                berhati-hatilah.
-              </p>
-            </div>
-          )}
         </section>
 
         {/* Pilar 3 — DV dan OV diberi bobot yang sama. Ketiadaan nama
@@ -198,6 +174,36 @@ export default async function VerifikasiPublik({
           )}
         </section>
       </div>
+
+      {/* ---------- Kontak usaha ----------
+          Bukan klaim verifikasi seperti tiga pilar di atas, melainkan
+          PEKERJAAN untuk pembeli: bandingkan dengan yang tertera di toko.
+          Karena perannya berbeda, bobot visualnya juga dibedakan. */}
+      {(d.email || d.telepon) && (
+        <section className="kontakUsaha">
+          <h2 className="kontakLabel">Kontak usaha yang terverifikasi</h2>
+          <p className="kontakBaris">
+            {d.email && (
+              <a href={`mailto:${d.email}`} className="kontakNilai">
+                {d.email}
+              </a>
+            )}
+            {d.email && d.telepon && <span className="pemisah">·</span>}
+            {d.telepon && (
+              <a
+                href={`tel:${d.telepon.replace(/[^\d+]/g, "")}`}
+                className="kontakNilai"
+              >
+                {rapikanTelepon(d.telepon)}
+              </a>
+            )}
+          </p>
+          <p className="kontakAjakan">
+            Cocokkan dengan kontak yang tertera di toko. Kalau berbeda,
+            berhati-hatilah.
+          </p>
+        </section>
+      )}
 
       {/* ---------- Detail sekunder, sengaja kalem ---------- */}
       <section className="sekunder">

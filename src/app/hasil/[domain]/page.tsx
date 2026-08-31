@@ -96,25 +96,11 @@ export default async function HasilPemilik({
               width={196}
               height={196}
             />
-            <div className="qrKeterangan">
-              <p className="asetKecil">
-                Memindainya membuka halaman verifikasi Anda. Isinya alamat
-                lengkap, bukan tautan pendek — jadi tetap berfungsi meski
-                layanan pemendek sedang bermasalah.
-              </p>
-              <p className="qrUnduh">
-                <a
-                  href={`/qr/${encodeURIComponent(d.domain)}?ukuran=1024&unduh=1`}
-                >
-                  Unduh untuk dicetak (SVG)
-                </a>
-              </p>
-              <p className="asetKecil">
-                Berkas SVG tetap tajam dicetak sebesar apa pun. Cetak hitam di
-                atas putih, dan sisakan ruang kosong di sekelilingnya supaya
-                mudah dipindai.
-              </p>
-            </div>
+            <p className="qrUnduh">
+              <a href={`/qr/${encodeURIComponent(d.domain)}?ukuran=1024&unduh=1`}>
+                Unduh untuk dicetak (SVG)
+              </a>
+            </p>
           </div>
         </section>
 
@@ -155,7 +141,7 @@ export default async function HasilPemilik({
         <section className="asetBaris">
           <h2 className="asetLabel">Seal untuk situs Anda</h2>
           <p className="asetGuna">
-            Gambar yang bisa diklik, menuju halaman verifikasi Anda.
+            Tempel kode ini di situs Anda — tanpa skrip apa pun.
           </p>
 
           <p className="pratinjauSeal">
@@ -167,19 +153,10 @@ export default async function HasilPemilik({
             />
           </p>
 
-          <p className="asetKecil">
-            Salin kode ini dan tempel di halaman situs Anda. Tidak ada skrip
-            yang perlu dipasang.
-          </p>
           <div className="asetKotak asetKotak--kode">
             <pre>{kodeSemat}</pre>
             <TombolSalin teks={kodeSemat} />
           </div>
-          <p className="asetKecil">
-            Seal ini menyebut tingkat yang benar-benar terbukti. Kalau nanti
-            Anda naik tingkat, gambarnya ikut berubah sendiri — kode di situs
-            Anda tidak perlu diganti.
-          </p>
         </section>
       </div>
 

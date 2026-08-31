@@ -409,37 +409,24 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .kepalaB { padding-bottom: 1.9rem; }
 
 @media (min-width: 60rem) {
-  .halamanB {
+  /* Kepala melebar penuh di atas; tiga pilar berdampingan di bawahnya.
+     Pilar identitas tadinya 2,2x lebih panjang dari pilar sertifikat —
+     blok kontak dikeluarkan jadi barisnya sendiri, dan selisihnya turun
+     jadi 1,4x. Panjangnya tetap bergantung data, jadi tidak akan pernah
+     rata sempurna. */
+  .pilar {
     display: grid;
-    grid-template-columns: minmax(0, 23rem) minmax(0, 1fr);
-    column-gap: 4rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 2.75rem;
     align-items: start;
+    border-bottom: 1px solid var(--rule);
   }
-
-  /* Kepala menempati seluruh tinggi kolom kiri supaya putusannya ikut
-     terlihat selama pembaca menelusuri buktinya. */
-  .kepalaB {
-    grid-column: 1;
-    grid-row: 1 / -1;
-    align-self: start;
-    position: sticky;
-    top: 2rem;
-    padding-bottom: 0;
+  .pilarBaris { border-bottom: none; padding: 1.5rem 0 1.8rem; }
+  .pilarBaris + .pilarBaris {
+    border-left: 1px solid var(--rule);
+    padding-left: 2.75rem;
+    margin-left: -1.375rem;
   }
-
-  .halamanB > .pilar,
-  .halamanB > .sekunder,
-  .halamanB > .waktuPeriksa,
-  .halamanB > .penutupB,
-  .halamanB > .ajakan { grid-column: 2; }
-
-  .halamanB > .pilar { margin-top: 0.35rem; }
-
-  /* Halaman "belum terdaftar" tidak punya bukti untuk kolom kanan.
-     Dipecah dua hanya akan menjepit keterangannya di kolom sempit. */
-  .halamanB--kosong { display: block; }
-  .halamanB--kosong .kepalaB { position: static; padding-bottom: 0; }
-  .halamanB--kosong .putusan { max-width: 20ch; }
 }
 
 /* Nama domain: cukup sedang. Sudah diketahui pembeli. */
@@ -467,8 +454,8 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .putusan--netral   { color: var(--muted); }
 
 @media (min-width: 60rem) {
-  .putusan { font-size: 2.6rem; max-width: 13ch; }
-  .namaDomain { font-size: 1.22rem; }
+  .putusan { font-size: 3rem; max-width: 20ch; }
+  .namaDomain { font-size: 1.35rem; }
 }
 
 .putusanKeterangan {
@@ -528,12 +515,34 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   max-width: 58ch;
 }
 
-/* ---------- kontak usaha ---------- */
+/* ---------- kontak usaha ----------
+   Bukan klaim verifikasi, melainkan pekerjaan untuk pembeli. Bobotnya
+   sengaja dibedakan dari tiga pilar di atasnya. */
 
-.kontakUsaha { margin: 1rem 0 0; }
+.kontakUsaha {
+  margin: 1.5rem 0 0;
+  padding: 1.1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+.kontakLabel {
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+.kontakAjakan {
+  margin: 0.5rem 0 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+  max-width: 58ch;
+}
 .kontakBaris {
   margin: 0;
-  font-size: 1rem;
+  font-size: 1.05rem;
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -781,8 +790,8 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .asetKotak {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  gap: 0.6rem;
+  flex-wrap: nowrap;
   background: var(--surface);
   border: 1px solid var(--rule);
   border-radius: var(--radius);
@@ -805,7 +814,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .asetKotak--tunggu p:last-child { margin-bottom: 0; }
 
 .asetNilai {
-  flex: 1 1 16rem;
+  flex: 1 1 auto;
   min-width: 0;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.86rem;
@@ -820,7 +829,10 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .asetKotak--kode pre {
   margin: 0;
   padding: 0.85rem;
-  overflow-x: auto;
+  /* Membungkus, bukan terpotong: kolomnya sempit dan kode yang
+     terpotong di kanan tidak bisa disalin dengan mata. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.8rem;
   line-height: 1.55;
@@ -876,7 +888,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 
 @media (min-width: 62rem) {
   .qrBlok { display: block; }
-  .qrGambar { margin-bottom: 0.9rem; }
+  .qrGambar { margin-bottom: 0.9rem; width: 100%; height: auto; max-width: 220px; }
 }
 .qrKeterangan .asetKecil { margin-bottom: 0.7rem; }
-.qrUnduh { margin: 0 0 0.7rem; font-size: 0.93rem; font-weight: 500; }
+.qrUnduh { margin: 0; font-size: 0.93rem; font-weight: 500; }
