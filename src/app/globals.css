@@ -1,0 +1,152 @@
+/* ------------------------------------------------------------------
+   Token warna cekusaha.id
+   Aturan dari CLAUDE.md yang tidak boleh dilanggar:
+   - Latar halaman SELALU terang. Halaman B dibuka di luar ruangan.
+   - Hijau HANYA untuk status terverifikasi. Bukan warna merek.
+   - Terracotta HANYA untuk elemen interaktif. Tidak pernah menandai status.
+   - "Belum terverifikasi" memakai abu netral, BUKAN merah.
+   ------------------------------------------------------------------ */
+
+:root {
+  --paper:        #f7f7f5;
+  --surface:      #ffffff;
+  --rule:         #e2e0da;
+  --rule-soft:    #eeece7;
+
+  /* Merek: gelap dan tegas. Untuk kepala halaman, tombol, teks. */
+  --brand:        #1b2733;
+  --brand-soft:   #2c3a48;
+  --ink:          #1b2733;
+  --ink-soft:     #414d5a;
+  --muted:        #6d7480;
+
+  /* Aksen terracotta: tautan, tombol sekunder, penekanan. Bukan status. */
+  --accent:       #ab4f2b;
+  --accent-strong:#8d3d1e;
+
+  /* Hijau: HANYA penanda status terverifikasi. */
+  --verified:     #16704a;
+  --verified-bg:  #e6efe9;
+
+  /* Belum terverifikasi: abu netral. Bukan peringatan, bukan tuduhan. */
+  --pending:      #6d7480;
+  --pending-bg:   #edebe7;
+
+  --radius:       3px;
+  --measure:      64ch;
+}
+
+* { box-sizing: border-box; }
+
+html, body { padding: 0; margin: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-jakarta), ui-sans-serif, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-underline-offset: 2px; }
+a:hover { color: var(--accent-strong); }
+a:focus-visible,
+button:focus-visible,
+input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; margin: 0; }
+
+/* ---------- kerangka halaman ---------- */
+
+.siteHeader {
+  background: var(--brand);
+  color: #ffffff;
+  border-bottom: 1px solid var(--brand);
+}
+
+.siteHeader .bar {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.wordmark {
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-decoration: none;
+}
+.wordmark .tld { color: #d99570; font-weight: 600; }
+
+.siteHeader .tagline {
+  font-size: 0.8rem;
+  color: #a8b2bd;
+  margin-left: auto;
+}
+
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+}
+
+.siteFooter {
+  border-top: 1px solid var(--rule);
+  background: var(--surface);
+}
+.siteFooter .bar {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1.1rem 1.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* ---------- elemen umum ---------- */
+
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.7rem;
+}
+
+.lead {
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+  margin: 0.7rem 0 0;
+}
+
+.note {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: var(--measure);
+}
+
+/* Penanda status. Hijau hanya di sini. */
+.status {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 0.16rem 0.5rem;
+  border-radius: var(--radius);
+}
+.status--verified { color: var(--verified); background: var(--verified-bg); }
+.status--pending  { color: var(--pending);  background: var(--pending-bg); }
