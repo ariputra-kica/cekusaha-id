@@ -86,11 +86,6 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 .wordmark .tld { color: #d99570; font-weight: 600; }
 
-.siteHeader .tagline {
-  font-size: 0.8rem;
-  color: #a8b2bd;
-  margin-left: auto;
-}
 
 .page {
   flex: 1;
@@ -130,14 +125,6 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   margin: 0.7rem 0 0;
 }
 
-.note {
-  margin-top: 2.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--rule);
-  font-size: 0.85rem;
-  color: var(--muted);
-  max-width: var(--measure);
-}
 
 /* Penanda status. Hijau hanya di sini. */
 .status {
@@ -212,6 +199,15 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 
 .statusBaris { margin: 0.75rem 0 0; }
 
+/* Nama domain sebagai judul halaman. Bisa panjang, jadi boleh patah. */
+.domainJudul {
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0.2rem 0 0;
+  overflow-wrap: anywhere;
+}
+
 .recordDcv {
   margin: 1.6rem 0 0;
   border: 1px solid var(--rule);
@@ -246,13 +242,16 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   word-break: break-all;
   line-height: 1.5;
 }
-.recordDcv .petunjuk { font-size: 0.82rem; color: var(--muted); }
 
-.lanjut {
+/* Dua paragraf petunjuk di layar tunggu DCV. Perannya sama, jadi ukurannya
+   disamakan. Lebarnya mengikuti tabel di antaranya, bukan dipatok sendiri:
+   paragraf yang berhenti jauh sebelum tepi tabel meninggalkan ruang kosong
+   yang mencolok. Pemutusan barisnya dibiarkan apa adanya. */
+.dcvTeks {
   margin: 1.4rem 0 0;
-  max-width: var(--measure);
   color: var(--ink-soft);
-  font-size: 0.94rem;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 /* Kabar netral saat masih menunggu. Sengaja BUKAN merah, belum terpasang
@@ -343,7 +342,10 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   padding: 1.35rem 0;
   max-width: var(--measure);
 }
-.langkah:last-of-type { border-bottom: 1px solid var(--rule); }
+/* Baris terakhir ditandai eksplisit, bukan lewat :last-of-type: kotak simpan
+   juga sebuah <section> dan letaknya berpindah, jadi pemilih itu bisa jatuh
+   ke elemen yang salah. */
+.langkah--akhir { border-bottom: 1px solid var(--rule); }
 
 .langkahKepala {
   display: flex;
@@ -415,11 +417,6 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   color: #ffffff;
 }
 
-.petunjukTautan {
-  margin-left: 0.7rem;
-  font-size: 0.84rem;
-  color: var(--muted);
-}
 
 /* ==================================================================
    HALAMAN B, verifikasi publik
@@ -445,27 +442,6 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 
 .kepalaB { padding-bottom: 1.9rem; }
 
-@media (min-width: 60rem) {
-  /* Kepala melebar penuh di atas; tiga pilar berdampingan di bawahnya.
-     Pilar identitas tadinya 2,2x lebih panjang dari pilar sertifikat.
-     blok kontak dikeluarkan jadi barisnya sendiri, dan selisihnya turun
-     jadi 1,4x. Panjangnya tetap bergantung data, jadi tidak akan pernah
-     rata sempurna. */
-  .pilar {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: 2.75rem;
-    align-items: start;
-    border-bottom: 1px solid var(--rule);
-  }
-  .pilarBaris { border-bottom: none; padding: 1.5rem 0 1.8rem; }
-  .pilarBaris + .pilarBaris {
-    border-left: 1px solid var(--rule);
-    padding-left: 2.75rem;
-    margin-left: -1.375rem;
-  }
-}
-
 /* Nama domain dan putusan adalah satu kalimat, bukan dua elemen yang
    bersaing: "cekusaha.id, identitas pemilik terverifikasi". Keduanya
    sebesar yang lain; yang membedakan hanya warnanya. */
@@ -477,21 +453,20 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   text-wrap: balance;
   margin: 0.15rem 0 0;
   max-width: 26ch;
-  overflow-wrap: anywhere;
+  /* "anywhere" boleh memotong kata di titik mana pun kalau itu membuat baris
+     lebih rapi, dan pada domain panjang hasilnya "tokobungamawar" lalu
+     "indah.id" di baris berikutnya. "break-word" hanya memotong kalau kata
+     itu sendirian saja tidak muat, jadi nama domain tetap utuh. */
+  overflow-wrap: break-word;
 }
 .putusanDomain { color: var(--ink); }
 .putusanStatus--terbukti { color: var(--verified); }
 .putusanStatus--netral   { color: var(--muted); }
 
 @media (min-width: 60rem) {
-  .putusanGabung { font-size: 2.6rem; max-width: 30ch; }
-}
-
-.putusanKeterangan {
-  margin: 0.85rem 0 0;
-  color: var(--ink-soft);
-  font-size: 0.96rem;
-  max-width: 46ch;
+  /* Sedikit lebih lapang, supaya domain yang panjang tidak langsung
+     mendorong putusannya ke baris ketiga. */
+  .putusanGabung { font-size: 2.6rem; max-width: 34ch; }
 }
 
 .ajakan {
@@ -507,6 +482,33 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .pilarBaris {
   border-bottom: 1px solid var(--rule);
   padding: 1.4rem 0;
+}
+
+/* Tiga pilar berdampingan di layar lebar. Blok ini HARUS berada sesudah
+   aturan dasar di atasnya: keduanya sama kuat, jadi yang menang adalah yang
+   ditulis belakangan. Sewaktu blok ini masih di atas, garis bawah tiap pilar
+   tidak pernah hilang dan tampak seperti kotak yang terpotong.
+
+   "stretch", bukan "start": tinggi ketiga kolom disamakan supaya garis
+   pemisah tegaknya sama panjang. Panjang teksnya sendiri tetap bergantung
+   data dan tidak akan pernah rata. */
+@media (min-width: 60rem) {
+  .pilar {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 2.75rem;
+    align-items: stretch;
+    border-bottom: 1px solid var(--rule);
+  }
+  .pilarBaris {
+    border-bottom: none;
+    padding: 1.5rem 0 1.8rem;
+  }
+  .pilarBaris + .pilarBaris {
+    border-left: 1px solid var(--rule);
+    padding-left: 2.75rem;
+    margin-left: -1.375rem;
+  }
 }
 
 /* Label kategori: kecil, bukan judul yang bersaing dengan isinya. */
@@ -626,6 +628,8 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 @media (min-width: 60rem) {
   .kakiB { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .kakiB--dua { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kakiB--satu { grid-template-columns: minmax(0, 1fr); }
 }
 .kakiB h2 {
   font-size: 0.73rem;
@@ -642,22 +646,8 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   color: var(--muted);
 }
 .kakiB p:last-child { margin-bottom: 0; }
-
-/* ---------- penutup halaman "belum terdaftar" ---------- */
-
-.penutupB {
-  margin-top: 2.1rem;
-  padding-top: 1.2rem;
-  border-top: 1px solid var(--rule);
-}
-.penutupB p {
-  margin: 0 0 0.7rem;
-  font-size: 0.84rem;
-  line-height: 1.6;
-  color: var(--muted);
-  max-width: 52ch;
-}
-.penutupB p:last-child { margin-bottom: 0; }
+/* Satu blok saja: tanpa batas, barisnya melintang selebar halaman. */
+.kakiB--satu p { max-width: 62ch; }
 
 /* ==================================================================
    BERANDA, kotak reverse lookup
@@ -666,25 +656,12 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
    dan pertahanan anti-transplantasi jadi wajah depan.
    ================================================================== */
 
-/* Lebar penuh halaman. Di layar lebar judul dan penjelasannya berdampingan,
-   lalu dua bagian penutup juga berdampingan, supaya separuh kanan tidak
-   menganggur. */
+/* Lebar penuh halaman, supaya dua bagian penutup bisa berdampingan dan
+   separuh kanan tidak menganggur. */
 .beranda { max-width: none; }
 
-.berandaKepala { max-width: 52rem; }
-
-@media (min-width: 62rem) {
-  .berandaKepala {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 3.5rem;
-    align-items: end;
-    max-width: none;
-  }
-  .berandaLead { padding-bottom: 0.4rem; }
-}
-
-.berandaJudul {
+.berandaJudul,
+.daftarJudul {
   font-size: clamp(1.75rem, 5vw, 2.5rem);
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -693,78 +670,33 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   max-width: 18ch;
 }
 
-.berandaLead {
-  font-size: 1.02rem;
-  color: var(--ink-soft);
-  max-width: 52ch;
-  margin: 0;
+/* Judul pendaftaran dijaga satu baris. Di layar sangat sempit tetap boleh
+   patah, karena dipaksa satu baris di situ berarti keluar dari layar. */
+.daftarJudul { max-width: none; }
+@media (min-width: 36rem) {
+  .daftarJudul { white-space: nowrap; }
 }
 
-/* Kotak periksa dibuat lebih besar dari formulir biasa, ini pekerjaan
-   utama halaman, bukan pelengkap. */
-.formCari { margin-top: 1.7rem; max-width: 46rem; }
-.formCari input[type="text"] {
+
+/* Kotak masukan utama di beranda dan di layar pertama pendaftaran. Dibuat
+   lebih besar dari formulir biasa, ini pekerjaan utama halamannya, bukan
+   pelengkap. */
+.formBesar { margin-top: 1.7rem; max-width: 46rem; }
+.formBesar input[type="text"] {
   flex: 1 1 22rem;
   font-size: 1.05rem;
   padding: 0.78rem 0.9rem;
 }
-.formCari .tombol {
+.formBesar .tombol {
   font-size: 1.02rem;
   padding: 0.78rem 1.4rem;
 }
 
-.berandaBagian { margin-top: 2.6rem; }
-
-@media (min-width: 62rem) {
-  /* Dua bagian penutup berdampingan, dipisah garis tegak. Satu garis
-     tipis, bukan dua kartu. */
-  .berandaBagian {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    column-gap: 3.5rem;
-    align-items: start;
-    border-top: 1px solid var(--ink);
-  }
-  .berandaBagian > section {
-    margin-top: 0;
-    padding: 1.15rem 0 0;
-    border-top: none;
-    max-width: 62ch;
-  }
-  .berandaBagian > section + section {
-    border-left: 1px solid var(--rule);
-    padding-left: 3.5rem;
-    margin-left: -1.75rem;
-  }
-}
-
-.peringatanTransplantasi {
-  margin-top: 0;
-  padding: 1.15rem 0 0;
-  border-top: 1px solid var(--ink);
-  max-width: 52ch;
-}
-.peringatanTransplantasi h2 {
-  font-size: 0.73rem;
-  font-weight: 600;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 0 0 0.5rem;
-}
-.peringatanTransplantasi p {
-  margin: 0 0 0.6rem;
-  font-size: 0.95rem;
-  color: var(--ink-soft);
-  line-height: 1.6;
-}
-.peringatanTransplantasi p:last-child { margin-bottom: 0; }
-
 .apaYangDiperiksa {
-  margin-top: 2.2rem;
+  margin-top: 2.6rem;
   padding-top: 1.15rem;
-  border-top: 1px solid var(--rule);
-  max-width: 52ch;
+  border-top: 1px solid var(--ink);
+  max-width: 62ch;
 }
 .apaYangDiperiksa h2 {
   font-size: 0.73rem;
@@ -789,10 +721,25 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .apaYangDiperiksa li:last-child { border-bottom: none; }
 .apaYangDiperiksa li strong { color: var(--ink); font-weight: 600; }
 
-.apaCatatan {
-  margin: 0.9rem 0 0;
-  font-size: 0.86rem;
-  color: var(--muted);
+/* Di layar lebar ketiganya berdampingan, dipisah garis tegak tipis.
+   Bukan tiga kartu: garis saja, sesuai arah desain. */
+@media (min-width: 62rem) {
+  .apaYangDiperiksa { max-width: none; }
+  .apaYangDiperiksa ul {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 3rem;
+    align-items: start;
+  }
+  .apaYangDiperiksa li {
+    padding: 0.15rem 0 0;
+    border-bottom: none;
+  }
+  .apaYangDiperiksa li + li {
+    border-left: 1px solid var(--rule);
+    padding-left: 3rem;
+    margin-left: -1.5rem;
+  }
 }
 
 /* Satu baris ringan tepat di bawah kotak periksa. Bukan tombol, supaya
@@ -808,17 +755,6 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
    ================================================================== */
 
 .halamanA { max-width: 76rem; }
-
-/* Peringatan privasi. Ditaruh di atas dekat labelnya, bukan sebagai
-   catatan kaki: yang membacanya belakangan sudah terlanjur membagikan. */
-.peringatanPrivat {
-  margin: 0.1rem 0 0.7rem;
-  padding-left: 0.7rem;
-  border-left: 3px solid var(--accent);
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--ink-soft);
-}
 
 .hasilJudul {
   font-size: clamp(1.6rem, 5vw, 2.1rem);
@@ -1037,11 +973,3 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 .simpanBlok .formBaris { margin-top: 1rem; }
 
-/* Pengganti blok simpan selama kontak belum terbukti. Sengaja tanpa garis
-   atas sendiri, seksi langkah di bawahnya sudah membawa garisnya. */
-.catatanSimpan {
-  margin: 1.8rem 0;
-  font-size: 0.9rem;
-  color: var(--muted);
-  max-width: 52ch;
-}
