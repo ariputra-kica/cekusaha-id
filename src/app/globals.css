@@ -69,7 +69,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 
 .siteHeader .bar {
-  max-width: 60rem;
+  max-width: 76rem;
   margin: 0 auto;
   padding: 0.85rem 1.5rem;
   display: flex;
@@ -95,7 +95,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .page {
   flex: 1;
   width: 100%;
-  max-width: 60rem;
+  max-width: 76rem;
   margin: 0 auto;
   padding: 3rem 1.5rem 4rem;
 }
@@ -105,7 +105,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   background: var(--surface);
 }
 .siteFooter .bar {
-  max-width: 60rem;
+  max-width: 76rem;
   margin: 0 auto;
   padding: 1.1rem 1.5rem;
   font-size: 0.8rem;
@@ -411,8 +411,8 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 @media (min-width: 60rem) {
   .halamanB {
     display: grid;
-    grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
-    column-gap: 3.5rem;
+    grid-template-columns: minmax(0, 23rem) minmax(0, 1fr);
+    column-gap: 4rem;
     align-items: start;
   }
 
@@ -467,7 +467,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 .putusan--netral   { color: var(--muted); }
 
 @media (min-width: 60rem) {
-  .putusan { font-size: 2.35rem; max-width: 12ch; }
+  .putusan { font-size: 2.6rem; max-width: 13ch; }
   .namaDomain { font-size: 1.22rem; }
 }
 
@@ -511,7 +511,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   letter-spacing: -0.012em;
   line-height: 1.4;
   color: var(--ink);
-  max-width: 48ch;
+  max-width: 54ch;
   text-wrap: pretty;
 }
 /* Keadaan "belum" memakai abu netral, BUKAN merah. Belum mendaftar
@@ -525,7 +525,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   font-size: 0.86rem;
   line-height: 1.55;
   color: var(--muted);
-  max-width: 48ch;
+  max-width: 58ch;
 }
 
 /* ---------- kontak usaha ---------- */
@@ -596,7 +596,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
    dan pertahanan anti-transplantasi jadi wajah depan.
    ================================================================== */
 
-.beranda { max-width: 46rem; }
+.beranda { max-width: 52rem; }
 
 .berandaJudul {
   font-size: clamp(1.75rem, 5vw, 2.5rem);
@@ -695,7 +695,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
    HALAMAN A — hasil pemilik, privat
    ================================================================== */
 
-.halamanA { max-width: 44rem; }
+.halamanA { max-width: 76rem; }
 
 .hasilJudul {
   font-size: clamp(1.6rem, 5vw, 2.1rem);
@@ -731,11 +731,34 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 
 /* ---------- tiga aset ---------- */
 
+/* Tiga aset adalah pilihan yang SEJAJAR — QR, tautan pendek, dan seal
+   sama pentingnya, tinggal pemilik memilih mana yang dipakai di mana.
+   Berdampingan menyampaikan itu; bertumpuk vertikal terbaca seperti
+   urutan langkah. */
 .aset { margin-top: 2.2rem; border-top: 1px solid var(--ink); }
 
 .asetBaris {
   border-bottom: 1px solid var(--rule);
   padding: 1.5rem 0;
+}
+
+@media (min-width: 62rem) {
+  .aset {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 2.5rem;
+    align-items: start;
+  }
+  .asetBaris {
+    padding: 1.5rem 0 1.7rem;
+    border-bottom: none;
+  }
+  /* Garis pemisah jadi tegak, mengikuti arah susunannya. */
+  .asetBaris + .asetBaris {
+    border-left: 1px solid var(--rule);
+    padding-left: 2.5rem;
+    margin-left: -1.25rem;
+  }
 }
 
 .asetLabel {
@@ -850,5 +873,10 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   padding: 0.5rem;
 }
 .qrKeterangan { flex: 1 1 18rem; min-width: 0; }
+
+@media (min-width: 62rem) {
+  .qrBlok { display: block; }
+  .qrGambar { margin-bottom: 0.9rem; }
+}
 .qrKeterangan .asetKecil { margin-bottom: 0.7rem; }
 .qrUnduh { margin: 0 0 0.7rem; font-size: 0.93rem; font-weight: 500; }

@@ -135,7 +135,7 @@ export default async function HasilPemilik({
               <div className="asetKotak asetKotak--tunggu">
                 <p>
                   {aset.sidGalat
-                    ? "Tautan pendek belum berhasil dibuat. Anda tetap bisa memakai alamat lengkapnya di bawah."
+                    ? "Tautan pendek belum berhasil dibuat. Coba lagi, atau lewati saja — aset lain tetap berfungsi."
                     : "Tautan pendek belum dibuat."}
                 </p>
               </div>
@@ -149,14 +149,6 @@ export default async function HasilPemilik({
             </>
           )}
 
-          <div className="asetKotak asetKotak--sunyi">
-            <code className="asetNilai">{tautanVerifikasi}</code>
-            <TombolSalin teks={tautanVerifikasi} />
-          </div>
-          <p className="asetKecil">
-            Alamat lengkap ini selalu berfungsi, dengan atau tanpa tautan
-            pendek.
-          </p>
         </section>
 
         {/* ---- 3. Seal + kode semat ---- */}
