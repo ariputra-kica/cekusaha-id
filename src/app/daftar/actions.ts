@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { mulaiDcv, periksaDcv, normalisasiDomain, domainMasukAkal } from "@/lib/dcv";
 import { mulaiSesi, periksaSesi, type Tingkat } from "@/lib/eid";
 import { segarkanSumberLuar } from "@/lib/sumber";
+import { terbitkan } from "@/lib/terbit";
 
 export async function aksiMulai(formData: FormData) {
   const domain = normalisasiDomain(String(formData.get("domain") || ""));
@@ -66,4 +67,18 @@ export async function aksiPeriksaEid(formData: FormData) {
   const sessionId = String(formData.get("sessionId") || "");
   const h = await periksaSesi(sessionId);
   redirect(`/daftar?domain=${encodeURIComponent(domain)}&eid=${h.kode}`);
+}
+
+/**
+ * Simpan pendaftaran, terbitkan halaman publik, lalu bawa pemilik ke
+ * halaman hasilnya. Tautan pendek dibuat sekali di dalam terbitkan().
+ */
+export async function aksiTerbitkan(formData: FormData) {
+  const domain = normalisasiDomain(String(formData.get("domain") || ""));
+  const h = await terbitkan(domain);
+
+  if (!h.bisa) {
+    redirect(`/daftar?domain=${encodeURIComponent(domain)}&eid=belum-siap`);
+  }
+  redirect(`/hasil/${encodeURIComponent(domain)}`);
 }

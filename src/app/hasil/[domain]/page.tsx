@@ -122,19 +122,17 @@ export default async function HasilPemilik({
             </div>
           ) : (
             <>
+              {/* Tautan pendek dibuat otomatis saat pendaftaran disimpan.
+                  Kotak ini hanya muncul kalau panggilan ke s.id gagal, dan
+                  itu tidak menggagalkan apa pun. */}
               <div className="asetKotak asetKotak--tunggu">
                 <p>
-                  {aset.sidGalat
-                    ? "Tautan pendek belum berhasil dibuat. Coba lagi, atau lewati saja. Aset lain tetap berfungsi."
-                    : "Tautan pendek belum dibuat."}
+                  Belum berhasil dibuat. Aset lain tetap berfungsi tanpa ini.
                 </p>
               </div>
               <form action={aksiBuatTautanPendek} className="formBaris">
                 <input type="hidden" name="domain" value={d.domain} />
-                <TombolKirim
-                  label={aset.sidGalat ? "Coba buat lagi" : "Buat tautan pendek"}
-                  labelSedang="Membuat…"
-                />
+                <TombolKirim label="Coba lagi" labelSedang="Mencoba…" />
               </form>
             </>
           )}

@@ -1,6 +1,6 @@
 import { bacaKeadaan } from "@/lib/dcv";
 import { bacaSemuaIdentitas, bacaSesiAktif, SKEMA, type Tingkat } from "@/lib/eid";
-import { aksiMulai, aksiCekUlang, aksiMulaiEid, aksiPeriksaEid } from "./actions";
+import { aksiMulai, aksiCekUlang, aksiMulaiEid, aksiPeriksaEid, aksiTerbitkan } from "./actions";
 import TombolKirim from "./TombolKirim";
 import { rapikanNama, rapikanTelepon, rapikanVerificator } from "@/lib/tampilan";
 
@@ -17,6 +17,8 @@ const PESAN_EID: Record<string, string> = {
   "orang-berbeda":
     "Identitas ini berasal dari dompet e.id yang berbeda dengan yang sudah terdaftar untuk domain ini. Gunakan dompet yang sama.",
   "gagal-mulai": "Tidak bisa memulai sesi verifikasi. Coba sebentar lagi.",
+  "belum-siap":
+    "Belum bisa disimpan. Kepemilikan domain dan Kontak Terverifikasi harus selesai lebih dulu.",
   galat: "Terjadi kendala saat menghubungi e.id. Coba sebentar lagi.",
 };
 
@@ -260,8 +262,32 @@ export default async function Pendaftaran({
 
         {kabar && <p className={kabarBuruk ? "galat" : "kabar"}>{kabar}</p>}
 
+        {/* Kontak sudah cukup untuk menyimpan. Identitas boleh menyusul
+            kapan pun, dan ajakannya ada di halaman hasil. */}
+        {kontak ? (
+          <section className="simpanBlok">
+            <h2>Siap disimpan</h2>
+            <p>
+              {diri
+                ? "Kepemilikan domain dan identitas Anda sudah terbukti."
+                : "Kepemilikan domain dan kontak Anda sudah terbukti. Identitas bisa ditambahkan kapan saja nanti."}
+            </p>
+            <form action={aksiTerbitkan} className="formBaris">
+              <input type="hidden" name="domain" value={keadaan.domain} />
+              <TombolKirim
+                label="Simpan dan lihat hasil"
+                labelSedang="Menyimpan…"
+              />
+            </form>
+          </section>
+        ) : (
+          <p className="note">
+            Setelah Kontak Terverifikasi selesai, Anda bisa menyimpan dan
+            menerbitkan halaman publiknya.
+          </p>
+        )}
+
         <p className="note">
-          Penerbitan halaman publik belum dipasang.{" "}
           <a href="/daftar">Daftarkan domain lain</a>
         </p>
       </>

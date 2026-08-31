@@ -934,3 +934,26 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 .qrKeterangan .asetKecil { margin-bottom: 0.7rem; }
 .qrUnduh { margin: 0; font-size: 0.93rem; font-weight: 500; }
+
+/* Blok simpan di akhir alur pendaftaran. Kontak sudah cukup; identitas
+   boleh menyusul. */
+.simpanBlok {
+  margin: 1.8rem 0 0;
+  padding: 1.2rem 1.35rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  max-width: 52ch;
+}
+.simpanBlok h2 {
+  font-size: 1.02rem;
+  font-weight: 600;
+  margin: 0 0 0.35rem;
+}
+.simpanBlok p {
+  margin: 0;
+  font-size: 0.94rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.simpanBlok .formBaris { margin-top: 1rem; }

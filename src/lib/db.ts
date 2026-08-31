@@ -32,7 +32,10 @@ export function ambilDb(): DatabaseSync {
       -- Hasil pemeriksaan terakhir, supaya halaman bisa menunjukkan bahwa
       -- tombol "Cek ulang" benar-benar mengerjakan sesuatu.
       dcv_kode_terakhir   TEXT,
-      dcv_txt_terbaca     TEXT
+      dcv_txt_terbaca     TEXT,
+      -- Waktu pendaftaran disimpan dan halaman publiknya diterbitkan.
+      -- INTERNAL, tidak pernah ditampilkan di Halaman B.
+      diterbitkan_pada    TEXT
     );
   `);
 
@@ -117,7 +120,7 @@ export function ambilDb(): DatabaseSync {
   `);
 
   // Tambahkan kolom baru pada basis data yang sudah terlanjur dibuat.
-  for (const k of ["dcv_kode_terakhir", "dcv_txt_terbaca"]) {
+  for (const k of ["dcv_kode_terakhir", "dcv_txt_terbaca", "diterbitkan_pada"]) {
     try {
       db.exec(`ALTER TABLE domain ADD COLUMN ${k} TEXT`);
     } catch {
