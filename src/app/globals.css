@@ -193,6 +193,23 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 }
 .tombol:hover { background: var(--brand-soft); border-color: var(--brand-soft); }
 
+/* Tawaran sampingan. Dua tombol gelap berdampingan membuat keduanya
+   terbaca sama penting, padahal salah satunya hanya opsional. */
+.tombol--garis {
+  color: var(--accent);
+  background: none;
+  border-color: var(--accent);
+}
+.tombol--garis:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+.tombol--garis .putar {
+  border-color: rgba(171, 79, 43, 0.3);
+  border-top-color: var(--accent);
+}
+
 .statusBaris { margin: 0.75rem 0 0; }
 
 .recordDcv {
@@ -345,6 +362,26 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   margin: 0 0 0.2rem;
   color: var(--ink-soft);
   font-size: 0.95rem;
+  max-width: 62ch;
+}
+
+/* Di layar lebar tiap langkah jadi dua kolom: judul dan statusnya di kiri,
+   isinya di kanan. Bertumpuk di satu kolom sempit menyisakan separuh layar
+   kosong tanpa alasan. */
+@media (min-width: 62rem) {
+  .langkah {
+    max-width: none;
+    display: grid;
+    grid-template-columns: 18rem minmax(0, 1fr);
+    column-gap: 3rem;
+  }
+  .langkahKepala {
+    grid-column: 1;
+    display: block;
+    margin-bottom: 0;
+  }
+  .langkahKepala .status { margin-top: 0.45rem; }
+  .langkah > :not(.langkahKepala) { grid-column: 2; }
 }
 
 .dataIdentitas { margin: 0.6rem 0 0; }
@@ -980,7 +1017,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 /* Blok simpan di akhir alur pendaftaran. Kontak sudah cukup; identitas
    boleh menyusul. */
 .simpanBlok {
-  margin: 1.8rem 0 0;
+  margin: 1.8rem 0;
   padding: 1.2rem 1.35rem;
   background: var(--surface);
   border: 1px solid var(--rule);
@@ -999,3 +1036,12 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   line-height: 1.6;
 }
 .simpanBlok .formBaris { margin-top: 1rem; }
+
+/* Pengganti blok simpan selama kontak belum terbukti. Sengaja tanpa garis
+   atas sendiri, seksi langkah di bawahnya sudah membawa garisnya. */
+.catatanSimpan {
+  margin: 1.8rem 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  max-width: 52ch;
+}

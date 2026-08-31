@@ -9,7 +9,7 @@ const PESAN_EID: Record<string, string> = {
     "Belum terbaca. Buka tautan di atas lewat ponsel Anda, lalu tekan periksa lagi.",
   "menunggu-persetujuan":
     "Dompet Anda sudah membaca permintaan ini. Sekarang tekan setuju di ponsel, lalu periksa lagi.",
-  tersimpan: "Berhasil disimpan.",
+  tersimpan: "Data dari dompet e.id Anda sudah kami terima.",
   ditolak: "Anda menolak berbagi data. Mulai lagi kalau berubah pikiran.",
   kedaluwarsa: "Sesi ini sudah kedaluwarsa. Mulai lagi dari awal.",
   hilang:
@@ -117,7 +117,7 @@ export default async function Pendaftaran({
             id="domain"
             name="domain"
             type="text"
-            placeholder="tokobunga.id"
+            placeholder="namatoko.id"
             autoComplete="off"
             autoCapitalize="off"
             spellCheck={false}
@@ -129,7 +129,7 @@ export default async function Pendaftaran({
         {sp.galat === "domain-tidak-sah" && (
           <p className="galat">
             Alamat domain itu belum benar. Contoh yang benar:{" "}
-            <strong>tokobunga.id</strong>
+            <strong>namatoko.id</strong>
           </p>
         )}
       </>
@@ -208,6 +208,33 @@ export default async function Pendaftaran({
           )}
         </section>
 
+        {kabar && <p className={kabarBuruk ? "galat" : "kabar"}>{kabar}</p>}
+
+        {/* Kontak sudah cukup untuk menyimpan. Identitas boleh menyusul
+            kapan pun, dan ajakannya ada di halaman hasil. */}
+        {kontak ? (
+          <section className="simpanBlok">
+            <h2>Siap disimpan</h2>
+            <p>
+              {diri
+                ? "Kepemilikan domain dan identitas Anda sudah terbukti."
+                : "Kepemilikan domain dan kontak Anda sudah terbukti. Identitas bisa ditambahkan kapan saja nanti."}
+            </p>
+            <form action={aksiTerbitkan} className="formBaris">
+              <input type="hidden" name="domain" value={keadaan.domain} />
+              <TombolKirim
+                label="Simpan dan lihat hasil"
+                labelSedang="Menyimpan…"
+              />
+            </form>
+          </section>
+        ) : (
+          <p className="catatanSimpan">
+            Setelah Kontak Terverifikasi selesai, Anda bisa menyimpan dan
+            menerbitkan halaman publiknya.
+          </p>
+        )}
+
         {/* ---- Langkah 3: identitas, hanya setelah kontak ---- */}
         <section className="langkah">
           <div className="langkahKepala">
@@ -254,38 +281,12 @@ export default async function Pendaftaran({
                 <TombolKirim
                   label="Naikkan ke Identitas Terverifikasi"
                   labelSedang="Menyiapkan…"
+                  gaya="garis"
                 />
               </form>
             </>
           )}
         </section>
-
-        {kabar && <p className={kabarBuruk ? "galat" : "kabar"}>{kabar}</p>}
-
-        {/* Kontak sudah cukup untuk menyimpan. Identitas boleh menyusul
-            kapan pun, dan ajakannya ada di halaman hasil. */}
-        {kontak ? (
-          <section className="simpanBlok">
-            <h2>Siap disimpan</h2>
-            <p>
-              {diri
-                ? "Kepemilikan domain dan identitas Anda sudah terbukti."
-                : "Kepemilikan domain dan kontak Anda sudah terbukti. Identitas bisa ditambahkan kapan saja nanti."}
-            </p>
-            <form action={aksiTerbitkan} className="formBaris">
-              <input type="hidden" name="domain" value={keadaan.domain} />
-              <TombolKirim
-                label="Simpan dan lihat hasil"
-                labelSedang="Menyimpan…"
-              />
-            </form>
-          </section>
-        ) : (
-          <p className="note">
-            Setelah Kontak Terverifikasi selesai, Anda bisa menyimpan dan
-            menerbitkan halaman publiknya.
-          </p>
-        )}
 
         <p className="note">
           <a href="/daftar">Daftarkan domain lain</a>

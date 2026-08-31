@@ -13,16 +13,19 @@ import { useFormStatus } from "react-dom";
 export default function TombolKirim({
   label,
   labelSedang,
+  gaya = "utama",
 }: {
   label: string;
   labelSedang: string;
+  /** "garis" untuk tawaran sampingan, supaya tidak bersaing dengan aksi utama. */
+  gaya?: "utama" | "garis";
 }) {
   const { pending } = useFormStatus();
 
   return (
     <button
       type="submit"
-      className="tombol"
+      className={gaya === "garis" ? "tombol tombol--garis" : "tombol"}
       disabled={pending}
       aria-busy={pending}
     >
