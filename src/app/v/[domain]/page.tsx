@@ -51,15 +51,18 @@ export default async function VerifikasiPublik({
   if (!d.terdaftar) {
     return (
       <article className="halamanB">
-        <p className="eyebrow">Halaman verifikasi</p>
-        <h1 className="namaDomain">{d.domain}</h1>
-        <p className="ikhtisar ikhtisar--netral">
-          Belum terverifikasi di cekusaha.id
-        </p>
-        <p className="ikhtisarKeterangan">
-          Kami belum punya catatan verifikasi untuk domain ini. Itu bukan
-          tanda ada yang salah — sebagian besar domain memang belum mendaftar.
-        </p>
+        <header className="kepalaB">
+          <p className="eyebrow">Halaman verifikasi</p>
+          <h1 className="namaDomain">{d.domain}</h1>
+          <p className="putusan putusan--netral">
+            Belum terverifikasi di cekusaha.id
+          </p>
+          <p className="putusanKeterangan">
+            Kami belum punya catatan verifikasi untuk domain ini. Itu bukan
+            tanda ada yang salah — sebagian besar domain memang belum
+            mendaftar.
+          </p>
+        </header>
 
         <p className="ajakan">
           Pemilik domain ini?{" "}
@@ -73,7 +76,7 @@ export default async function VerifikasiPublik({
     );
   }
 
-  const ikhtisar =
+  const putusan =
     d.tingkat === "identitas"
       ? "Identitas pemilik terverifikasi"
       : d.tingkat === "kontak"
@@ -82,138 +85,115 @@ export default async function VerifikasiPublik({
 
   return (
     <article className="halamanB">
-      <p className="eyebrow">Halaman verifikasi</p>
-      <h1 className="namaDomain">{d.domain}</h1>
-      <p className="ikhtisar ikhtisar--terbukti">{ikhtisar}</p>
+      <header className="kepalaB">
+        <p className="eyebrow">Halaman verifikasi</p>
+        <h1 className="namaDomain">{d.domain}</h1>
+        <p className="putusan putusan--terbukti">{putusan}</p>
+      </header>
 
       {/* ---------- Tiga pilar ----------
-          Baris yang dipisah garis tipis. Bukan kartu, bukan ikon dalam
-          kotak, bukan centang berdiri sendiri. */}
+          Baris yang dipisah garis tipis. Tiap pilar langsung menyatakan
+          faktanya sebagai kalimat; penjelasannya menyusul di bawah,
+          lebih kecil, untuk yang bertanya "apa maksudnya ini". */}
       <div className="pilar">
         {/* Pilar 1 */}
         <section className="pilarBaris">
-          <div className="pilarKepala">
-            <h2>Kepemilikan domain</h2>
-            <span className="status status--verified">Terbukti</span>
-          </div>
-          <p className="pilarIsi">
-            Pemilik membuktikan kendali atas domain ini dengan memasang
-            catatan DNS yang kami minta
+          <h2 className="pilarLabel">Kepemilikan domain</h2>
+          <p className="pernyataan">
+            Terbukti
             {d.domainTerbuktiPada ? ` pada ${tanggal(d.domainTerbuktiPada)}` : ""}.
+          </p>
+          <p className="pilarCatatan">
+            Pemilik memasang catatan DNS yang kami minta di domain ini. Hanya
+            orang yang mengendalikan domain yang bisa melakukannya.
           </p>
         </section>
 
         {/* Pilar 2 */}
         <section className="pilarBaris">
-          <div className="pilarKepala">
-            <h2>Identitas pemilik</h2>
-            {d.tingkat ? (
-              <span className="status status--verified">
-                {d.tingkat === "identitas"
-                  ? "Identitas Terverifikasi"
-                  : "Kontak Terverifikasi"}
-              </span>
-            ) : (
-              <span className="status status--pending">Belum</span>
-            )}
-          </div>
+          <h2 className="pilarLabel">Identitas pemilik</h2>
+
+          {d.tingkat === "identitas" && (
+            <>
+              <p className="pernyataan">
+                {rapikanNama(d.nama)}
+                {d.verificator
+                  ? `, diperiksa oleh ${rapikanVerificator(d.verificator)}.`
+                  : "."}
+              </p>
+              <p className="pilarCatatan">
+                Identitas perorangan diverifikasi hingga tingkat Penyelenggara
+                Sertifikasi Elektronik, lewat kredensial e.id milik pemilik.
+              </p>
+            </>
+          )}
+
+          {d.tingkat === "kontak" && (
+            <>
+              <p className="pernyataan">
+                Email dan nomor telepon terverifikasi.
+              </p>
+              <p className="pilarCatatan">
+                Identitas perorangan pemilik belum diverifikasi. Yang terbukti
+                baru kontaknya.
+              </p>
+            </>
+          )}
 
           {d.tingkat === null && (
-            <p className="pilarIsi">
+            <p className="pernyataan pernyataan--belum">
               Pemilik belum menautkan identitas terverifikasi.
             </p>
           )}
 
-          {d.tingkat === "kontak" && (
-            <p className="pilarIsi">
-              Email dan nomor telepon pemilik sudah diverifikasi lewat e.id.
-              Identitas perorangannya belum diverifikasi.
-            </p>
-          )}
-
-          {d.tingkat === "identitas" && (
-            <p className="pilarIsi">
-              Identitas pemilik diverifikasi hingga tingkat Penyelenggara
-              Sertifikasi Elektronik lewat e.id.
-            </p>
-          )}
-
-          {(d.nama || d.verificator || d.email || d.telepon) && (
-            <dl className="rincian">
-              {d.nama && (
-                <div>
-                  <dt>Nama pemilik</dt>
-                  <dd>{rapikanNama(d.nama)}</dd>
-                </div>
-              )}
-              {d.verificator && (
-                <div>
-                  <dt>Diperiksa oleh</dt>
-                  <dd>{rapikanVerificator(d.verificator)}</dd>
-                </div>
-              )}
-              {d.email && (
-                <div>
-                  <dt>Email</dt>
-                  <dd>{d.email}</dd>
-                </div>
-              )}
-              {d.telepon && (
-                <div>
-                  <dt>Telepon</dt>
-                  <dd>{rapikanTelepon(d.telepon)}</dd>
-                </div>
-              )}
-            </dl>
-          )}
-
           {(d.email || d.telepon) && (
-            <p className="pilarCatatan">
-              Cocokkan kontak ini dengan yang tertera di toko. Kalau berbeda,
-              berhati-hatilah.
-            </p>
+            <div className="kontakUsaha">
+              <p className="kontakBaris">
+                {d.email && (
+                  <a href={`mailto:${d.email}`} className="kontakNilai">
+                    {d.email}
+                  </a>
+                )}
+                {d.email && d.telepon && <span className="pemisah">·</span>}
+                {d.telepon && (
+                  <a
+                    href={`tel:${d.telepon.replace(/[^\d+]/g, "")}`}
+                    className="kontakNilai"
+                  >
+                    {rapikanTelepon(d.telepon)}
+                  </a>
+                )}
+              </p>
+              <p className="pilarCatatan">
+                Cocokkan kontak ini dengan yang tertera di toko. Kalau berbeda,
+                berhati-hatilah.
+              </p>
+            </div>
           )}
         </section>
 
-        {/* Pilar 3 — DV dan OV diberi bobot visual yang sama. Ketiadaan
-            nama organisasi bukan sinyal negatif. */}
+        {/* Pilar 3 — DV dan OV diberi bobot yang sama. Ketiadaan nama
+            organisasi bukan sinyal negatif. Penerbit sebagai teks, tanpa logo. */}
         <section className="pilarBaris">
-          <div className="pilarKepala">
-            <h2>Sertifikat situs</h2>
-            {d.ssl.ada ? (
-              <span className="status status--verified">
-                {d.ssl.jenisValidasi === "OV"
-                  ? "Organisasi tervalidasi"
-                  : "Domain tervalidasi"}
-              </span>
-            ) : (
-              <span className="status status--pending">Belum diperiksa</span>
-            )}
-          </div>
+          <h2 className="pilarLabel">Sertifikat situs</h2>
 
           {d.ssl.ada ? (
             <>
-              <p className="pilarIsi">
+              <p className="pernyataan">
                 {d.ssl.organisasi
-                  ? "Sertifikat situs ini memuat nama organisasi yang sudah divalidasi penerbitnya."
-                  : "Sertifikat situs ini memvalidasi kendali atas domain. Itu jenis yang paling umum dipakai situs yang sah."}
+                  ? `Memuat nama organisasi ${d.ssl.organisasi}`
+                  : "Kendali atas domain tervalidasi"}
+                {d.ssl.penerbit ? `, diterbitkan ${d.ssl.penerbit}.` : "."}
               </p>
-              <dl className="rincian">
-                {d.ssl.organisasi && (
-                  <div>
-                    <dt>Organisasi</dt>
-                    <dd>{d.ssl.organisasi}</dd>
-                  </div>
-                )}
-                <div>
-                  <dt>Penerbit</dt>
-                  <dd>{d.ssl.penerbit}</dd>
-                </div>
-              </dl>
+              <p className="pilarCatatan">
+                {d.ssl.organisasi
+                  ? "Penerbit sertifikat memeriksa keberadaan organisasi ini sebelum menerbitkannya."
+                  : "Jenis sertifikat yang paling umum dipakai situs yang sah."}
+              </p>
             </>
           ) : (
-            <p className="pilarIsi">
-              Pembacaan sertifikat belum tersimpan untuk domain ini.
+            <p className="pernyataan pernyataan--belum">
+              Sertifikat situs belum diperiksa.
             </p>
           )}
         </section>
@@ -222,30 +202,19 @@ export default async function VerifikasiPublik({
       {/* ---------- Detail sekunder, sengaja kalem ---------- */}
       <section className="sekunder">
         <h2>Catatan pendaftaran domain</h2>
-        {d.rdap.ada ? (
-          <dl className="rincian rincian--kalem">
-            {d.rdap.tanggalRegistrasi && (
-              <div>
-                <dt>Terdaftar sejak</dt>
-                <dd>{tanggal(d.rdap.tanggalRegistrasi)}</dd>
-              </div>
-            )}
-            {d.rdap.registrar && (
-              <div>
-                <dt>Registrar</dt>
-                <dd>{d.rdap.registrar}</dd>
-              </div>
-            )}
-          </dl>
+        {d.rdap.ada && (d.rdap.tanggalRegistrasi || d.rdap.registrar) ? (
+          <p className="sekunderIsi">
+            {d.rdap.tanggalRegistrasi
+              ? `Terdaftar sejak ${tanggal(d.rdap.tanggalRegistrasi)}`
+              : "Terdaftar"}
+            {d.rdap.registrar ? ` melalui ${d.rdap.registrar}` : ""}. Registrar
+            adalah penyedia jasa pendaftaran domain, bukan pemilik domain.
+          </p>
         ) : (
           <p className="sekunderIsi">
             Catatan registri belum tersimpan untuk domain ini.
           </p>
         )}
-        <p className="sekunderIsi">
-          Registrar adalah penyedia jasa pendaftaran domain, bukan pemilik
-          domain.
-        </p>
       </section>
 
       <p className="waktuPeriksa">
