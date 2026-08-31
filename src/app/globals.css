@@ -830,3 +830,25 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 
 .pratinjauSeal { margin: 0 0 0.9rem; }
 .pratinjauSeal img { display: block; max-width: 100%; height: auto; }
+
+/* ---------- blok QR ---------- */
+
+.qrBlok {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  align-items: flex-start;
+  margin-bottom: 0.4rem;
+}
+.qrGambar {
+  flex: 0 0 auto;
+  width: 196px;
+  height: 196px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: #ffffff;
+  padding: 0.5rem;
+}
+.qrKeterangan { flex: 1 1 18rem; min-width: 0; }
+.qrKeterangan .asetKecil { margin-bottom: 0.7rem; }
+.qrUnduh { margin: 0 0 0.7rem; font-size: 0.93rem; font-weight: 500; }

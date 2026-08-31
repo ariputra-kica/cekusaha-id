@@ -87,15 +87,34 @@ export default async function HasilPemilik({
           <p className="asetGuna">
             Untuk dicetak dan ditempel di kemasan, etalase, atau kartu nama.
           </p>
-          <div className="asetKotak asetKotak--tunggu">
-            <p>
-              Belum dipasang. Menggambar QR memerlukan satu pustaka tambahan,
-              dan itu menunggu persetujuan pemilik proyek.
-            </p>
-            <p className="asetKecil">
-              Sementara itu, alamat yang akan dimuat QR ini adalah tautan
-              verifikasi di bawah.
-            </p>
+          <div className="qrBlok">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="qrGambar"
+              src={`/qr/${encodeURIComponent(d.domain)}?ukuran=512`}
+              alt={`QR menuju halaman verifikasi ${d.domain}`}
+              width={196}
+              height={196}
+            />
+            <div className="qrKeterangan">
+              <p className="asetKecil">
+                Memindainya membuka halaman verifikasi Anda. Isinya alamat
+                lengkap, bukan tautan pendek — jadi tetap berfungsi meski
+                layanan pemendek sedang bermasalah.
+              </p>
+              <p className="qrUnduh">
+                <a
+                  href={`/qr/${encodeURIComponent(d.domain)}?ukuran=1024&unduh=1`}
+                >
+                  Unduh untuk dicetak (SVG)
+                </a>
+              </p>
+              <p className="asetKecil">
+                Berkas SVG tetap tajam dicetak sebesar apa pun. Cetak hitam di
+                atas putih, dan sisakan ruang kosong di sekelilingnya supaya
+                mudah dipindai.
+              </p>
+            </div>
           </div>
         </section>
 
