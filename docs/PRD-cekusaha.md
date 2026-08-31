@@ -78,6 +78,8 @@ Aplikasi menerbitkan token, pemilik memasangnya sebagai DNS TXT record, aplikasi
 
 Metode ini sengaja meniru Domain Control Validation yang dipakai Certificate Authority — standar industri, bukan mekanisme karangan.
 
+Kueri dikirim langsung ke server DNS resmi domain yang bersangkutan, bukan lewat resolver perantara yang menyimpan cache. Konsekuensinya terukur: pada pengujian, kepemilikan terbukti sekitar **31 detik** setelah TXT record dipasang. Lewat resolver umum, jeda yang sama bisa berlangsung menit sampai jam, dan pemilik akan mengira proses pendaftarannya gagal.
+
 **1.2 Pemeriksaan data domain (RDAP)**
 Memanggil `rdap.pandi.id/rdap/domain/{domain}` untuk menampilkan tanggal registrasi dan kedaluwarsa, status DNSSEC, registrar, dan status premium. Publik, tanpa kredensial.
 
@@ -89,7 +91,19 @@ Ditampilkan sebagai teks, netral terhadap penerbit, tanpa logo CA mana pun. **Ke
 **1.4 Verifikasi identitas lewat e.id**
 Lihat bagian 5.
 
-**1.5 Halaman hasil**
+**1.5 Alur pendaftaran**
+Satu jalur menurun, tanpa cabang dan tanpa langkah pratinjau terpisah:
+
+1. Pemilik memasukkan nama domainnya
+2. Membuktikan kepemilikan dengan memasang DNS TXT record yang diterbitkan aplikasi
+3. Begitu kepemilikan terbukti, aplikasi langsung mengambil data RDAP dan membaca sertifikat situs, lalu menyimpan keduanya. Pemilik tidak melakukan apa pun di langkah ini
+4. Verifikasi **Kontak Terverifikasi** lewat e.id. Wajib
+5. Verifikasi **Identitas Terverifikasi** lewat e.id. Opsional, dan boleh ditambahkan kapan saja sesudahnya
+6. Simpan dan terbitkan halaman verifikasi publiknya
+
+Langkah 3 sengaja dijalankan sekali di titik itu, bukan setiap halaman publik dibuka. Halaman publik akan dibuka berulang kali; menembak RDAP dan sertifikat tiap kali berarti lambat dan berisiko kena batas laju.
+
+**1.6 Halaman hasil**
 Satu halaman berisi seluruh bukti yang berhasil dikumpulkan.
 
 ### Lapis 2 — Tiga saluran distribusi
@@ -110,10 +124,16 @@ s.id dipilih karena diluncurkan PANDI dan sudah memiliki lapisan anti-penyalahgu
 
 **3.1 Dua tingkat verifikasi**
 
-| Tingkat | Kredensial | Yang dinyatakan |
-|---|---|---|
-| **Kontak Terverifikasi** | EID Membership Lv1 | Email dan nomor telepon terverifikasi. Identitas pemilik belum diverifikasi |
-| **Identitas Terverifikasi** | KYC Verification by PSrE | Identitas pemilik terverifikasi hingga tingkat Penyelenggara Sertifikasi Elektronik |
+Keduanya bukan dua pilihan sejajar, melainkan dua anak tangga.
+
+| Tingkat | Kredensial | Yang dinyatakan | Sifat |
+|---|---|---|---|
+| **Kontak Terverifikasi** | EID Membership Lv1 | Email dan nomor telepon terverifikasi. Identitas pemilik belum diverifikasi | Tingkat masuk, **wajib** dan harus selesai lebih dulu |
+| **Identitas Terverifikasi** | KYC Verification by PSrE | Identitas pemilik terverifikasi hingga tingkat Penyelenggara Sertifikasi Elektronik | **Opsional**, terkunci sampai Kontak selesai, boleh ditambahkan kapan saja |
+
+Kontak dijadikan syarat masuk karena itulah pintu yang paling murah dilewati pemilik usaha di hari pertama. Menuntut identitas perorangan di depan pintu berarti kehilangan mereka yang belum siap menyerahkannya, padahal bukti kepemilikan domainnya sendiri sudah bernilai.
+
+Identitas tidak pernah menjadi syarat menerbitkan. Pemilik boleh menerbitkan halaman publiknya dengan tingkat Kontak saja, lalu menaikkannya berminggu-minggu kemudian tanpa mendaftar ulang.
 
 Lencana tingkat bawah wajib menyatakan batasnya secara jujur. Tidak boleh menuliskan "terverifikasi" tanpa kualifikasi untuk tingkat Kontak.
 
@@ -125,6 +145,10 @@ Ajakan naik tingkat hanya muncul di halaman pemilik, tidak pernah di halaman pub
 **3.3 Halaman verifikasi publik**
 Dibuat **per domain**, bukan per orang. Menyatukan ketiga bukti dalam satu tampilan yang dapat dibuka tanpa akun.
 
+Halaman ini baru ada setelah pemiliknya menerbitkannya. Domain yang kepemilikannya sudah terbukti tapi belum diterbitkan tidak punya halaman publik sama sekali, dan alamatnya menampilkan keadaan "belum terverifikasi" yang sama seperti domain yang tidak pernah mendaftar.
+
+Itu bukan kelalaian teknis melainkan penerapan prinsip yang sama dengan persetujuan di dompet e.id: pemilik yang memutuskan membuktikan dirinya. Membuktikan kepemilikan domain kepada kami tidak otomatis berarti bersedia mengumumkannya.
+
 ---
 
 ## 5. Integrasi e.id
@@ -135,7 +159,7 @@ Peserta berperan sebagai **verifier**, sesuai arahan panitia.
 
 Aplikasi menentukan di depan skema apa yang diminta; sesi verifikasi terkunci pada skema tertentu sejak awal. Aplikasi tidak menebak kartu apa yang dibawa pengguna.
 
-Karena itu, penjenjangan dua tingkat diimplementasikan sebagai **dua Verification Schema terpisah**, dan pemilik memilih sendiri di layar pendaftaran mana yang akan dipresentasikan.
+Karena itu, penjenjangan dua tingkat diimplementasikan sebagai **dua Verification Schema terpisah**, dan sesi dimulai dengan skema yang sesuai tingkatnya. Urutannya tetap: Kontak lebih dulu, Identitas menyusul bila pemilik menghendaki.
 
 ### Alur teknis
 
@@ -148,6 +172,16 @@ Karena itu, penjenjangan dua tingkat diimplementasikan sebagai **dua Verificatio
 7. Setelah `APPROVED`, aplikasi **segera** mengambil hasil dan menyimpannya ke basis data
 
 **Persetujuan berada di tangan pemilik data**, bukan otomatis saat QR dipindai. Ini sejalan dengan prinsip produk: pemilik yang memutuskan membuktikan dirinya, bukan sistem yang membuka datanya.
+
+### Privasi data identitas
+
+NIK dan tanggal lahir **tidak pernah dikirim ke server kami**. Ini bukan penyaringan setelah data tiba, melainkan batas yang ditentukan sebelum sesi dimulai.
+
+Yang menentukan adalah `required_fields` di dalam Verification Schema milik verifier. Sesi verifikasi terkunci pada skema itu sejak permintaan dibuat, dan dompet hanya melepaskan field yang diminta. Terbukti dari respons e.id yang sebenarnya: pada tingkat Identitas, `credentialSubject` yang kami terima hanya berisi nama dan nama lembaga pemeriksanya. Tidak ada NIK, tidak ada tanggal lahir, tidak ada alamat.
+
+Perbedaan ini penting dan bukan soal istilah. Data yang tidak pernah tiba tidak bisa bocor, tidak bisa diminta aparat, dan tidak bisa terbawa ke cadangan. Data yang tiba lalu dibuang tetap pernah ada.
+
+Batas yang sama berlaku untuk apa yang ditampilkan. Nama boleh tampil di halaman publik; sisa isi kredensial diperlakukan sebagai internal.
 
 ### Dua alur QR yang berbeda
 
