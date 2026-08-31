@@ -13,6 +13,16 @@ function tanggal(iso: string | null) {
   });
 }
 
+/**
+ * Menutup kalimat dengan titik, kecuali kalau isinya sudah berakhir titik.
+ * Nama dari sumber luar sering membawa titiknya sendiri, misalnya
+ * "KOREA INFORMATION CERTIFICATE AUTHORITY INC." dan tanpa ini kalimatnya
+ * berakhir dengan dua titik.
+ */
+function titik(teks: string) {
+  return /[.!?]$/.test(teks.trim()) ? teks : `${teks}.`;
+}
+
 function tanggalJam(iso: string | null) {
   if (!iso) return null;
   return new Date(iso).toLocaleString("id-ID", {
@@ -59,38 +69,34 @@ export default async function VerifikasiPublik({
               belum terverifikasi di cekusaha.id
             </span>
           </h1>
-          <p className="putusanKeterangan">
-            Kami belum punya catatan verifikasi untuk domain ini. Itu bukan
-            tanda ada yang salah. Sebagian besar domain memang belum
-            mendaftar.
-          </p>
         </header>
 
-        <p className="ajakan">
-          Pemilik domain ini?{" "}
-          <a href={`/daftar?domain=${encodeURIComponent(d.domain)}`}>
-            Buktikan kepemilikannya
-          </a>
-        </p>
-
-        <Penutup />
+        <Penutup domain={d.domain} />
       </article>
     );
   }
 
+  /* Bunyinya mengikuti tingkat tertinggi yang terbukti, bukan teks tetap.
+     Hanya tingkat identitas yang boleh berbunyi "terverifikasi" begitu saja.
+     Dua tingkat di bawahnya wajib menyebut batasnya, kalau tidak halaman ini
+     menjanjikan lebih dari yang sebenarnya dibuktikan. */
   const putusan =
     d.tingkat === "identitas"
-      ? "identitas pemilik terverifikasi"
+      ? "terverifikasi"
       : d.tingkat === "kontak"
         ? "kontak pemilik terverifikasi"
         : "kepemilikan domain terbukti";
+
+  // Tanpa kualifikasi, domain dan putusannya menyatu jadi satu frasa.
+  const pakaiKoma = d.tingkat !== "identitas";
 
   return (
     <article className="halamanB">
       <header className="kepalaB">
         <p className="eyebrow">Halaman verifikasi</p>
         <h1 className="putusanGabung">
-          <span className="putusanDomain">{d.domain}</span>,{" "}
+          <span className="putusanDomain">{d.domain}</span>
+          {pakaiKoma ? "," : ""}{" "}
           <span className="putusanStatus putusanStatus--terbukti">
             {putusan}
           </span>
@@ -105,14 +111,25 @@ export default async function VerifikasiPublik({
         {/* Pilar 1 */}
         <section className="pilarBaris">
           <h2 className="pilarLabel">Kepemilikan domain</h2>
+          {/* Dua tanggal yang berbeda dan mudah tertukar: yang di atas adalah
+              saat kepemilikan dibuktikan di sini, yang di bawah adalah umur
+              domainnya sendiri menurut registri. */}
           <p className="pernyataan">
-            Terbukti
-            {d.domainTerbuktiPada ? ` pada ${tanggal(d.domainTerbuktiPada)}` : ""}.
+            Terverifikasi
+            {d.domainTerbuktiPada ? ` sejak ${tanggal(d.domainTerbuktiPada)}` : ""}.
           </p>
-          <p className="pilarCatatan">
-            Pemilik memasang catatan DNS yang kami minta di domain ini. Hanya
-            orang yang mengendalikan domain yang bisa melakukannya.
-          </p>
+          {d.rdap.ada && (d.rdap.tanggalRegistrasi || d.rdap.registrar) && (
+            <p className="pilarCatatan">
+              {titik(
+                (d.rdap.tanggalRegistrasi
+                  ? `Terdaftar sejak ${tanggal(d.rdap.tanggalRegistrasi)}`
+                  : "Terdaftar") +
+                  (d.rdap.registrar
+                    ? `${d.rdap.tanggalRegistrasi ? "," : ""} melalui registrar PANDI, ${d.rdap.registrar}`
+                    : ""),
+              )}
+            </p>
+          )}
         </section>
 
         {/* Pilar 2 */}
@@ -129,7 +146,8 @@ export default async function VerifikasiPublik({
               </p>
               <p className="pilarCatatan">
                 Identitas perorangan diverifikasi hingga tingkat Penyelenggara
-                Sertifikasi Elektronik, lewat kredensial e.id milik pemilik.
+                Sertifikasi Elektronik, lewat kredensial e.id milik pemilik
+                usaha.
               </p>
             </>
           )}
@@ -140,8 +158,7 @@ export default async function VerifikasiPublik({
                 Email dan nomor telepon terverifikasi.
               </p>
               <p className="pilarCatatan">
-                Identitas perorangan pemilik belum diverifikasi. Yang terbukti
-                baru kontaknya.
+                Identitas perorangan pemilik belum diverifikasi.
               </p>
             </>
           )}
@@ -157,21 +174,27 @@ export default async function VerifikasiPublik({
         {/* Pilar 3. DV dan OV diberi bobot yang sama. Ketiadaan nama
             organisasi bukan sinyal negatif. Penerbit sebagai teks, tanpa logo. */}
         <section className="pilarBaris">
-          <h2 className="pilarLabel">Sertifikat situs</h2>
+          <h2 className="pilarLabel">Informasi SSL/TLS Certificate</h2>
 
           {d.ssl.ada ? (
             <>
+              {/* Tingkatnya lebih dulu, detailnya menyusul. DV dan OV ditulis
+                  sebagai dua bentuk yang setara, bukan sebagai yang lengkap
+                  dan yang kurang. Pembedanya ada tidaknya nama organisasi
+                  pada subject sertifikat. */}
               <p className="pernyataan">
                 {d.ssl.organisasi
-                  ? `Memuat nama organisasi ${d.ssl.organisasi}`
-                  : "Kendali atas domain tervalidasi"}
-                {d.ssl.penerbit ? `, diterbitkan ${d.ssl.penerbit}.` : "."}
+                  ? "Verifikasi Tingkat Organisasi"
+                  : "Verifikasi Tingkat Domain"}
               </p>
-              <p className="pilarCatatan">
-                {d.ssl.organisasi
-                  ? "Penerbit sertifikat memeriksa keberadaan organisasi ini sebelum menerbitkannya."
-                  : "Jenis sertifikat yang paling umum dipakai situs yang sah."}
-              </p>
+              {d.ssl.penerbit && (
+                <p className="pilarCatatan">
+                  {titik(
+                    `Sertifikat diterbitkan oleh ${d.ssl.penerbit}` +
+                      (d.ssl.organisasi ? ` untuk ${d.ssl.organisasi}` : ""),
+                  )}
+                </p>
+              )}
             </>
           ) : (
             <p className="pernyataan pernyataan--belum">
@@ -214,8 +237,7 @@ export default async function VerifikasiPublik({
             )}
           </dl>
           <p className="kontakAjakan">
-            Cocokkan dengan kontak yang tertera di toko. Kalau berbeda,
-            berhati-hatilah.
+            Cocokkan dengan kontak yang Anda terima.
           </p>
         </section>
       )}
@@ -223,34 +245,7 @@ export default async function VerifikasiPublik({
       {/* ---------- Bagian bawah ----------
           Tiga blok berdampingan supaya lebar yang tersedia terpakai,
           bukan menumpuk ke bawah sambil menyisakan ruang kosong di kanan. */}
-      <footer className="kakiB">
-        <section>
-          <h2>Catatan pendaftaran domain</h2>
-          {d.rdap.ada && (d.rdap.tanggalRegistrasi || d.rdap.registrar) ? (
-            <p>
-              {d.rdap.tanggalRegistrasi
-                ? `Terdaftar sejak ${tanggal(d.rdap.tanggalRegistrasi)}`
-                : "Terdaftar"}
-              {d.rdap.registrar ? ` melalui ${d.rdap.registrar}` : ""}.
-              Registrar adalah penyedia jasa pendaftaran domain, bukan
-              pemilik domain.
-            </p>
-          ) : (
-            <p>Catatan registri belum tersimpan untuk domain ini.</p>
-          )}
-        </section>
-
-        <section>
-          <h2>Asal data</h2>
-          <p>
-            Setiap pernyataan di halaman ini berasal dari pemeriksaan yang
-            bisa ditunjuk sumbernya: catatan DNS untuk kepemilikan domain,
-            kredensial e.id untuk identitas, dan sertifikat situs untuk
-            enkripsi. Kami tidak menampilkan apa pun yang tidak kami periksa
-            sendiri.
-          </p>
-        </section>
-
+      <footer className="kakiB kakiB--satu">
         <section>
           <h2>Pemeriksaan dan pelaporan</h2>
           <p>
@@ -269,19 +264,32 @@ export default async function VerifikasiPublik({
   );
 }
 
-function Penutup() {
+function Penutup({ domain }: { domain: string }) {
   return (
-    <footer className="penutupB">
-      <p>
-        Setiap pernyataan di halaman ini berasal dari pemeriksaan yang bisa
-        ditunjuk sumbernya: catatan DNS untuk kepemilikan domain, kredensial
-        e.id untuk identitas, dan sertifikat situs untuk enkripsi. Kami tidak
-        menampilkan apa pun yang tidak kami periksa sendiri.
-      </p>
-      <p>
-        Menemukan penyalahgunaan halaman ini?{" "}
-        <a href={`mailto:${KONTAK_LAPORAN}`}>Laporkan kepada kami</a>.
-      </p>
+    <footer className="kakiB kakiB--dua">
+      <section>
+        <h2>Catatan verifikasi</h2>
+        <p>Kami belum punya catatan verifikasi untuk domain ini.</p>
+        <p>
+          Pemilik domain ini?{" "}
+          <a href={`/daftar?domain=${encodeURIComponent(domain)}`}>
+            Buktikan kepemilikannya
+          </a>
+        </p>
+      </section>
+
+      {/* Domain ini belum terdaftar di sini, jadi tidak ada halaman kami yang
+          bisa disalahgunakan. Laporan soal domainnya sendiri ditangani IDADX. */}
+      <section>
+        <h2>Pelaporan</h2>
+        <p>
+          Menemukan penyalahgunaan domain ini?{" "}
+          <a href="https://idadx.id/report" rel="noopener noreferrer">
+            Laporkan kepada IDADX
+          </a>
+          .
+        </p>
+      </section>
     </footer>
   );
 }

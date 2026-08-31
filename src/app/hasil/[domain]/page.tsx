@@ -33,7 +33,7 @@ export default async function HasilPemilik({
   if (!d.terdaftar || !d.domainTerbukti) {
     return (
       <div className="halamanA">
-        <p className="eyebrow">Halaman pemilik</p>
+        <p className="eyebrow">Halaman pemilik Usaha</p>
         <h1 className="hasilJudul">{d.domain}</h1>
         <p className="lead">
           Domain ini belum selesai didaftarkan, jadi belum ada aset yang bisa
@@ -50,18 +50,22 @@ export default async function HasilPemilik({
 
   return (
     <div className="halamanA">
-      <p className="eyebrow">Halaman pemilik</p>
-      <p className="peringatanPrivat">
-        Jangan dibagikan. Siapa pun yang tahu alamat ini bisa membukanya.
-      </p>
+      <p className="eyebrow">Halaman pemilik Usaha</p>
       <h1 className="hasilJudul">{d.domain}</h1>
       <p className="lead">
-        Pendaftaran selesai. Tiga aset di bawah ini semuanya menuju halaman
-        verifikasi publik yang sama, dan boleh dipakai di mana saja.
+        Verifikasi selesai. Aset di bawah ini semuanya menuju halaman
+        verifikasi publik yang sama.
       </p>
 
+      {/* Tab baru: halaman pemilik ini tidak muncul di riwayat mana pun dan
+          tidak punya jalan kembali, jadi menimpanya berarti pemilik kehilangan
+          QR, tautan pendek, dan kode seal di layar yang sama. */}
       <p className="tautanUtama">
-        <a href={`/v/${encodeURIComponent(d.domain)}`}>
+        <a
+          href={`/v/${encodeURIComponent(d.domain)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Lihat halaman verifikasi publik Anda
         </a>
       </p>
@@ -102,7 +106,7 @@ export default async function HasilPemilik({
             />
             <p className="qrUnduh">
               <a href={`/qr/${encodeURIComponent(d.domain)}?ukuran=1024&unduh=1`}>
-                Unduh untuk dicetak (SVG)
+                Unduh QR (SVG)
               </a>
             </p>
           </div>
@@ -142,9 +146,7 @@ export default async function HasilPemilik({
         {/* ---- 3. Seal + kode semat ---- */}
         <section className="asetBaris">
           <h2 className="asetLabel">Seal untuk situs Anda</h2>
-          <p className="asetGuna">
-            Tempel kode ini di situs Anda. Tidak ada skrip yang perlu dipasang.
-          </p>
+          <p className="asetGuna">Tempel kode ini di situs Anda.</p>
 
           <p className="pratinjauSeal">
             {/* eslint-disable-next-line @next/next/no-img-element */}
