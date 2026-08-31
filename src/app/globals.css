@@ -383,3 +383,150 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   font-size: 0.84rem;
   color: var(--muted);
 }
+
+/* ==================================================================
+   HALAMAN B — verifikasi publik
+
+   Dibuka lewat ponsel, sering di luar ruangan. Latar tetap terang.
+   Nama domain adalah elemen paling menonjol. Tiga pilar dibaca dalam
+   sekali pandang, sebagai baris yang dipisah garis tipis — bukan kartu,
+   bukan ikon dalam kotak pastel.
+   ================================================================== */
+
+.halamanB {
+  max-width: 40rem;   /* dibatasi supaya nyaman dibaca di layar lebar */
+  margin: 0 auto;
+}
+
+.namaDomain {
+  font-size: clamp(2.1rem, 8vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  margin: 0.2rem 0 0.6rem;
+  overflow-wrap: anywhere;
+}
+
+/* Ikhtisar: kalimat yang harus terbaca dalam dua detik. */
+.ikhtisar {
+  font-size: 1.18rem;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  margin: 0 0 0.5rem;
+  padding-bottom: 1.4rem;
+}
+.ikhtisar--terbukti { color: var(--verified); }
+.ikhtisar--netral   { color: var(--muted); }
+
+.ikhtisarKeterangan {
+  margin: -0.9rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.96rem;
+}
+
+.ajakan {
+  margin: 1.8rem 0 0;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- tiga pilar ---------- */
+
+.pilar { border-top: 1px solid var(--ink); }
+
+.pilarBaris {
+  border-bottom: 1px solid var(--rule);
+  padding: 1.5rem 0;
+}
+
+.pilarKepala {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.55rem;
+}
+.pilarKepala h2 {
+  font-size: 1.13rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.pilarIsi {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.96rem;
+  max-width: 46ch;
+}
+
+.pilarCatatan {
+  margin: 0.85rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  max-width: 46ch;
+}
+
+.rincian { margin: 0.9rem 0 0; }
+.rincian > div {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  gap: 0.35rem 1rem;
+  padding: 0.3rem 0;
+}
+.rincian dt {
+  font-size: 0.87rem;
+  color: var(--muted);
+}
+.rincian dd {
+  margin: 0;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.rincian--kalem dd { font-weight: 400; color: var(--ink-soft); }
+
+@media (max-width: 32rem) {
+  .rincian > div { grid-template-columns: minmax(0, 1fr); gap: 0.05rem; padding: 0.4rem 0; }
+  .rincian dt { font-size: 0.82rem; }
+}
+
+/* ---------- detail sekunder, sengaja tidak bersaing ---------- */
+
+.sekunder { padding: 1.5rem 0 0; }
+.sekunder h2 {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.7rem;
+}
+.sekunderIsi {
+  margin: 0.7rem 0 0;
+  font-size: 0.88rem;
+  color: var(--muted);
+  max-width: 46ch;
+}
+
+.waktuPeriksa {
+  margin: 1.8rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: 46ch;
+}
+
+/* ---------- penutup ---------- */
+
+.penutupB {
+  margin-top: 2.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
+}
+.penutupB p {
+  margin: 0 0 0.7rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+  max-width: 52ch;
+}
+.penutupB p:last-child { margin-bottom: 0; }
