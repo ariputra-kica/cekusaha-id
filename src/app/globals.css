@@ -412,27 +412,47 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   word-break: break-word;
 }
 
-/* QR di kiri, tautan dan tombol periksa di kanan. Keduanya menuju alamat
-   yang sama; yang berbeda hanya di perangkat mana pemilik membukanya. */
-.dompetBaris {
+/* Dua cara memulai, berdampingan dan setara. Keduanya menuju alamat yang
+   sama; yang berbeda hanya di perangkat mana pemilik membukanya. QR dibuat
+   sebanding dengan tombol di sampingnya, bukan mendominasi: ia salah satu
+   dari dua pilihan, bukan yang utama. */
+.dompetMulai {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 1.25rem;
+  align-items: center;
+  gap: 2rem;
   margin-top: 0.9rem;
 }
+
 .qrDompet {
   flex: 0 0 auto;
-  width: 160px;
-  height: 160px;
+  margin: 0;
+  width: 128px;
+}
+.qrDompet img {
+  display: block;
+  width: 128px;
+  height: 128px;
   border: 1px solid var(--rule);
   border-radius: var(--radius);
   background: #ffffff;
-  padding: 0.4rem;
+  padding: 0.35rem;
 }
-.dompetAksi { flex: 1 1 16rem; min-width: 0; }
+/* Tanpa keterangan, QR cuma gambar yang muncul tanpa alasan. */
+.qrDompet figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.79rem;
+  line-height: 1.4;
+  color: var(--muted);
+  text-align: center;
+}
 
 .tautanDompet { margin: 0; }
+
+/* Langkah berikutnya, bukan pilihan ketiga. Jaraknya sengaja lebar supaya
+   tidak terbaca sebagai satu blok dengan dua cara memulai di atasnya. */
+.dompetPeriksa { margin-top: 2rem; }
+.dompetPeriksa .formBaris { margin-top: 0.7rem; }
 .tautanDompet a {
   display: inline-block;
   font-weight: 600;

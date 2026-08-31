@@ -94,37 +94,46 @@ function SesiBerjalan({
         {SKEMA[sesi.tingkat].mintaManusia}.
       </p>
 
-      <div className="dompetBaris">
+      {/* Dua tahap, bukan tiga pilihan. Di atas: dua cara memulai yang
+          setara, tinggal pilih sesuai di perangkat mana dompetnya ada.
+          Di bawah, dipisah jarak: memeriksa hasilnya, yang baru masuk akal
+          SESUDAH pemilik menyetujui di ponselnya. */}
+      <div className="dompetMulai">
         {sesi.walletUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            className="qrDompet"
-            src={qrDompet(sesi.walletUrl)}
-            alt="QR menuju permintaan verifikasi e.id"
-            width={160}
-            height={160}
-          />
+          <figure className="qrDompet">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={qrDompet(sesi.walletUrl)}
+              alt="QR menuju permintaan verifikasi e.id"
+              width={128}
+              height={128}
+            />
+            <figcaption>Pindai dengan aplikasi e.id</figcaption>
+          </figure>
         )}
 
-        <div className="dompetAksi">
-          {/* Tab baru: kalau tautan ini menimpa halaman, pemilik kehilangan
-              tempat menekan "Periksa status" setelah menyetujui di e.id. */}
-          <p className="tautanDompet">
-            <a
-              href={sesi.walletUrl ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Buka di aplikasi e.id
-            </a>
-          </p>
+        {/* Tab baru: kalau tautan ini menimpa halaman, pemilik kehilangan
+            tempat menekan "Periksa status" setelah menyetujui di e.id. */}
+        <p className="tautanDompet">
+          <a
+            href={sesi.walletUrl ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Buka di aplikasi e.id
+          </a>
+        </p>
+      </div>
 
-          <form action={aksiPeriksaEid} className="formBaris">
-            <input type="hidden" name="domain" value={domain} />
-            <input type="hidden" name="sessionId" value={sesi.sessionId} />
-            <TombolKirim label="Periksa status" labelSedang="Memeriksa…" />
-          </form>
-        </div>
+      <div className="dompetPeriksa">
+        <p className="langkahIsi">
+          Setelah menyetujui di aplikasi, tekan tombol di bawah.
+        </p>
+        <form action={aksiPeriksaEid} className="formBaris">
+          <input type="hidden" name="domain" value={domain} />
+          <input type="hidden" name="sessionId" value={sesi.sessionId} />
+          <TombolKirim label="Periksa status" labelSedang="Memeriksa…" />
+        </form>
       </div>
     </>
   );
