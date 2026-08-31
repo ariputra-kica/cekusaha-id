@@ -451,6 +451,7 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   line-height: 1.4;
   color: var(--muted);
   text-align: center;
+  white-space: nowrap;
 }
 
 .tautanDompet { margin: 0; }

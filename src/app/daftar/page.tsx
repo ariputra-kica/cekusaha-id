@@ -108,7 +108,7 @@ function SesiBerjalan({
               width={128}
               height={128}
             />
-            <figcaption>Pindai dengan aplikasi e.id</figcaption>
+            <figcaption>Pindai dengan e.id</figcaption>
           </figure>
         )}
 
@@ -122,7 +122,7 @@ function SesiBerjalan({
             target="_blank"
             rel="noopener noreferrer"
           >
-            Buka di aplikasi e.id
+            Buka di wallet e.id
           </a>
         </p>
       </div>
