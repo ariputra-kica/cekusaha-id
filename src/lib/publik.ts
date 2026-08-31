@@ -7,6 +7,14 @@
  * juri dan pengunjung, dan menembak API pihak ketiga tiap kali berarti
  * lambat dan berisiko kena batas laju.
  *
+ * Halaman publik hanya ada kalau pemiliknya MENERBITKANNYA. Kepemilikan
+ * domain yang terbukti saja tidak cukup. Pemilik yang memutuskan
+ * membuktikan dirinya, jadi menerbitkan klaim tentang orang yang belum
+ * menekan simpan berarti berbicara atas namanya tanpa persetujuan.
+ *
+ * Karena seal dan QR sama-sama membaca fungsi ini, syarat itu berlaku
+ * untuk ketiganya sekaligus, bukan hanya halaman.
+ *
  * Pemisahan PUBLIK vs INTERNAL mengikuti CLAUDE.md. Yang dikembalikan
  * fungsi ini adalah yang boleh tampil. holder_did, session_id,
  * credentialStatus, issuer, issuanceDate, dan retrieved_at sengaja TIDAK
@@ -80,7 +88,11 @@ export function bacaDataPublik(domainMentah: string): DataPublik {
   };
 
   const d: any = db.prepare("SELECT * FROM domain WHERE domain = ?").get(domain);
-  if (!d || d.dcv_status !== "terbukti") return kosong;
+
+  // Belum terdaftar, kepemilikan belum terbukti, atau sudah terbukti tapi
+  // pemiliknya belum menerbitkan: ketiganya diperlakukan sama, yaitu tidak
+  // punya halaman publik sama sekali.
+  if (!d || d.dcv_status !== "terbukti" || !d.diterbitkan_pada) return kosong;
 
   const baris: any[] = db
     .prepare("SELECT * FROM identitas WHERE domain = ?")
