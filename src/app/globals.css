@@ -588,3 +588,105 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   max-width: 52ch;
 }
 .penutupB p:last-child { margin-bottom: 0; }
+
+/* ==================================================================
+   BERANDA — kotak reverse lookup
+
+   Tidak ada landing terpisah. Pengunjung langsung melihat gunanya,
+   dan pertahanan anti-transplantasi jadi wajah depan.
+   ================================================================== */
+
+.beranda { max-width: 46rem; }
+
+.berandaJudul {
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0.2rem 0 0.7rem;
+  max-width: 18ch;
+}
+
+.berandaLead {
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  max-width: 52ch;
+  margin: 0;
+}
+
+/* Kotak periksa dibuat lebih besar dari formulir biasa — ini pekerjaan
+   utama halaman, bukan pelengkap. */
+.formCari { margin-top: 1.7rem; max-width: 34rem; }
+.formCari input[type="text"] {
+  font-size: 1.05rem;
+  padding: 0.78rem 0.9rem;
+}
+.formCari .tombol {
+  font-size: 1.02rem;
+  padding: 0.78rem 1.4rem;
+}
+
+.peringatanTransplantasi {
+  margin-top: 2.6rem;
+  padding: 1.15rem 0 0;
+  border-top: 1px solid var(--ink);
+  max-width: 52ch;
+}
+.peringatanTransplantasi h2 {
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+.peringatanTransplantasi p {
+  margin: 0 0 0.6rem;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.peringatanTransplantasi p:last-child { margin-bottom: 0; }
+
+.apaYangDiperiksa {
+  margin-top: 2.2rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--rule);
+  max-width: 52ch;
+}
+.apaYangDiperiksa h2 {
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.7rem;
+}
+.apaYangDiperiksa ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.apaYangDiperiksa li {
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule-soft);
+  font-size: 0.94rem;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.apaYangDiperiksa li:last-child { border-bottom: none; }
+.apaYangDiperiksa li strong { color: var(--ink); font-weight: 600; }
+
+.apaCatatan {
+  margin: 0.9rem 0 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.ajakanDaftar {
+  margin-top: 2.2rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
