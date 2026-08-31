@@ -24,3 +24,6 @@ yarn-error.log*
 
 # macOS
 .DS_Store
+
+# Berkas sementara TypeScript
+tsconfig.tsbuildinfo

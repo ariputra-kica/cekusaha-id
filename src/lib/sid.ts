@@ -17,6 +17,14 @@ import { ambilDb } from "./db.ts";
 const API = "https://api.s.id/v2/links";
 
 const kunci = () => process.env.S_ID_API_KEY || process.env.SID_API_KEY || "";
+
+/**
+ * Saklar untuk mematikan permintaan ke s.id, dipakai saat mengembangkan di
+ * laptop. Setiap tautan yang terlanjur dibuat memakai satu slug yang tidak
+ * bisa dipakai ulang, jadi percobaan berulang di lokal ikut menghabiskan
+ * nama slug di akun yang sama dengan produksi.
+ */
+const dimatikan = () => process.env.SID_MATIKAN === "1";
 const alamatAplikasi = () =>
   (process.env.APP_BASE_URL || "https://cekusaha.id").replace(/\/+$/, "");
 
@@ -85,6 +93,9 @@ export async function pastikanTautanPendek(domain: string): Promise<Aset> {
       .run(domain, url, slug, sekarang, galat);
     return bacaAset(domain);
   };
+
+  if (dimatikan())
+    return simpan(null, null, "Permintaan s.id dimatikan lewat SID_MATIKAN.");
 
   if (!kunci()) return simpan(null, null, "Kunci API s.id belum diisi.");
 
