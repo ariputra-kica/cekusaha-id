@@ -36,6 +36,46 @@ export function ambilDb(): DatabaseSync {
     );
   `);
 
+  db.exec(`
+    -- Sesi presentasi e.id yang sedang berjalan.
+    CREATE TABLE IF NOT EXISTS sesi_eid (
+      session_id     TEXT PRIMARY KEY,
+      domain         TEXT NOT NULL,
+      tingkat        TEXT NOT NULL,        -- 'kontak' | 'identitas'
+      wallet_url     TEXT,
+      expires_at     TEXT,
+      status         TEXT NOT NULL,
+      alasan_tolak   TEXT,
+      dibuat_pada    TEXT NOT NULL,
+      diperiksa_pada TEXT
+    );
+
+    -- Hasil verifikasi identitas yang sudah tersimpan.
+    -- Pemisahan INTERNAL vs BOLEH TAMPIL mengikuti aturan di CLAUDE.md.
+    CREATE TABLE IF NOT EXISTS identitas (
+      domain            TEXT NOT NULL,
+      tingkat           TEXT NOT NULL,
+
+      -- INTERNAL — tidak pernah dirender di Halaman B
+      holder_did        TEXT NOT NULL,
+      issuer            TEXT,
+      issuance_date     TEXT,
+      credential_id     TEXT,
+      credential_status TEXT,
+      session_id        TEXT,
+      retrieved_at      TEXT,
+
+      -- BOLEH TAMPIL — dipilih sadar, bukan semua yang kebetulan ada
+      email             TEXT,
+      phone_number      TEXT,
+      fullname          TEXT,
+      verificator       TEXT,
+
+      dibuat_pada       TEXT NOT NULL,
+      PRIMARY KEY (domain, tingkat)
+    );
+  `);
+
   // Tambahkan kolom baru pada basis data yang sudah terlanjur dibuat.
   for (const k of ["dcv_kode_terakhir", "dcv_txt_terbaca"]) {
     try {

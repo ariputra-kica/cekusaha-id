@@ -1,6 +1,23 @@
 import { bacaKeadaan } from "@/lib/dcv";
-import { aksiMulai, aksiCekUlang } from "./actions";
+import { bacaSemuaIdentitas, bacaSesiAktif, SKEMA, type Tingkat } from "@/lib/eid";
+import { aksiMulai, aksiCekUlang, aksiMulaiEid, aksiPeriksaEid } from "./actions";
 import TombolKirim from "./TombolKirim";
+
+const PESAN_EID: Record<string, string> = {
+  "menunggu-pindai":
+    "Belum terbaca. Buka tautan di atas lewat ponsel Anda, lalu tekan periksa lagi.",
+  "menunggu-persetujuan":
+    "Dompet Anda sudah membaca permintaan ini. Sekarang tekan setuju di ponsel, lalu periksa lagi.",
+  tersimpan: "Berhasil disimpan.",
+  ditolak: "Anda menolak berbagi data. Mulai lagi kalau berubah pikiran.",
+  kedaluwarsa: "Sesi ini sudah kedaluwarsa. Mulai lagi dari awal.",
+  hilang:
+    "Persetujuan Anda diterima, tapi datanya kedaluwarsa sebelum sempat kami ambil — batasnya lima menit. Mohon ulangi.",
+  "orang-berbeda":
+    "Identitas ini berasal dari dompet e.id yang berbeda dengan yang sudah terdaftar untuk domain ini. Gunakan dompet yang sama.",
+  "gagal-mulai": "Tidak bisa memulai sesi verifikasi. Coba sebentar lagi.",
+  galat: "Terjadi kendala saat menghubungi e.id. Coba sebentar lagi.",
+};
 
 const PESAN: Record<string, string> = {
   "belum-ada-txt":
@@ -31,10 +48,48 @@ function jamLengkap(iso: string | null) {
   });
 }
 
+/** Tampilan saat satu sesi presentasi e.id sedang menunggu pemilik. */
+function SesiBerjalan({
+  domain,
+  sesi,
+}: {
+  domain: string;
+  sesi: { sessionId: string; walletUrl: string | null; tingkat: Tingkat };
+}) {
+  return (
+    <>
+      <p className="langkahIsi">
+        Buka tautan ini di ponsel Anda. Aplikasi e.id akan menampilkan data apa
+        saja yang kami minta — {SKEMA[sesi.tingkat].mintaManusia} — lalu Anda yang
+        memutuskan menyetujui atau menolak.
+      </p>
+
+      {/* Tab baru: kalau tautan ini menimpa halaman, pemilik kehilangan
+          tempat menekan "Periksa status" setelah menyetujui di e.id. */}
+      <p className="tautanDompet">
+        <a
+          href={sesi.walletUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Buka di aplikasi e.id
+        </a>
+        <span className="petunjukTautan">terbuka di tab baru</span>
+      </p>
+
+      <form action={aksiPeriksaEid} className="formBaris">
+        <input type="hidden" name="domain" value={domain} />
+        <input type="hidden" name="sessionId" value={sesi.sessionId} />
+        <TombolKirim label="Periksa status" labelSedang="Memeriksa…" />
+      </form>
+    </>
+  );
+}
+
 export default async function Pendaftaran({
   searchParams,
 }: {
-  searchParams: Promise<{ domain?: string; kode?: string; galat?: string }>;
+  searchParams: Promise<{ domain?: string; kode?: string; galat?: string; eid?: string }>;
 }) {
   const sp = await searchParams;
   const keadaan = sp.domain ? bacaKeadaan(sp.domain) : null;
@@ -78,30 +133,134 @@ export default async function Pendaftaran({
     );
   }
 
-  /* ---------- Sudah terbukti ---------- */
+  /* ---------- Kepemilikan terbukti: lanjut ke identitas e.id ---------- */
   if (keadaan.status === "terbukti") {
+    const identitas = bacaSemuaIdentitas(keadaan.domain);
+    const kontak = identitas.find((i) => i.tingkat === "kontak") ?? null;
+    const diri = identitas.find((i) => i.tingkat === "identitas") ?? null;
+    const sesiKontak = kontak ? null : bacaSesiAktif(keadaan.domain, "kontak");
+    const sesiDiri = diri ? null : bacaSesiAktif(keadaan.domain, "identitas");
+
+    const kabar = sp.eid ? PESAN_EID[sp.eid] : null;
+    const kabarBuruk = ["ditolak", "hilang", "orang-berbeda", "galat", "gagal-mulai"].includes(
+      sp.eid || "",
+    );
+
     return (
       <>
-        <p className="eyebrow">Untuk pemilik usaha — langkah 1 dari 4</p>
+        <p className="eyebrow">Untuk pemilik usaha</p>
         <h1>{keadaan.domain}</h1>
 
-        <p className="statusBaris">
-          <span className="status status--verified">Kepemilikan terbukti</span>
-        </p>
+        {/* ---- Langkah 1: kepemilikan domain ---- */}
+        <section className="langkah">
+          <div className="langkahKepala">
+            <h2>Kepemilikan domain</h2>
+            <span className="status status--verified">Terbukti</span>
+          </div>
+          <p className="langkahIsi">
+            Dibuktikan lewat DNS pada {waktuLokal(keadaan.terbuktiPada)}. Kode
+            verifikasinya sudah dihapus dari basis data kami.
+          </p>
+        </section>
 
-        <p className="lead">
-          Anda sudah membuktikan kendali atas domain ini pada{" "}
-          {waktuLokal(keadaan.terbuktiPada)}. Kode verifikasinya sudah dihapus
-          dari basis data kami — sudah tidak diperlukan lagi.
-        </p>
+        {/* ---- Langkah 2: kontak ---- */}
+        <section className="langkah">
+          <div className="langkahKepala">
+            <h2>Kontak Terverifikasi</h2>
+            {kontak ? (
+              <span className="status status--verified">Terbukti</span>
+            ) : (
+              <span className="status status--pending">Belum</span>
+            )}
+          </div>
 
-        <p className="lanjut">
-          TXT record itu boleh Anda biarkan atau hapus dari DNS. Keduanya tidak
-          mengubah apa pun.
-        </p>
+          {kontak ? (
+            <dl className="dataIdentitas">
+              <div>
+                <dt>Email</dt>
+                <dd>{kontak.email}</dd>
+              </div>
+              <div>
+                <dt>Telepon</dt>
+                <dd>{kontak.phoneNumber}</dd>
+              </div>
+            </dl>
+          ) : sesiKontak ? (
+            <SesiBerjalan domain={keadaan.domain} sesi={sesiKontak} />
+          ) : (
+            <>
+              <p className="langkahIsi">
+                Buktikan email dan nomor telepon Anda lewat dompet e.id. Yang
+                kami minta hanya dua hal itu.
+              </p>
+              <form action={aksiMulaiEid} className="formBaris">
+                <input type="hidden" name="domain" value={keadaan.domain} />
+                <input type="hidden" name="tingkat" value="kontak" />
+                <TombolKirim
+                  label="Mulai verifikasi kontak"
+                  labelSedang="Menyiapkan…"
+                />
+              </form>
+            </>
+          )}
+        </section>
+
+        {/* ---- Langkah 3: identitas, hanya setelah kontak ---- */}
+        <section className="langkah">
+          <div className="langkahKepala">
+            <h2>Identitas Terverifikasi</h2>
+            {diri ? (
+              <span className="status status--verified">Terbukti</span>
+            ) : (
+              <span className="status status--pending">
+                {kontak ? "Belum" : "Terkunci"}
+              </span>
+            )}
+          </div>
+
+          {diri ? (
+            <dl className="dataIdentitas">
+              <div>
+                <dt>Nama</dt>
+                <dd>{diri.fullname}</dd>
+              </div>
+              <div>
+                <dt>Diverifikasi oleh</dt>
+                <dd>{diri.verificator}</dd>
+              </div>
+            </dl>
+          ) : !kontak ? (
+            <p className="langkahIsi">
+              Selesaikan verifikasi kontak lebih dulu. Kepercayaan dibangun
+              bertahap — Anda tidak harus menyerahkan semuanya sekaligus.
+            </p>
+          ) : sesiDiri ? (
+            <SesiBerjalan domain={keadaan.domain} sesi={sesiDiri} />
+          ) : (
+            <>
+              <p className="langkahIsi">
+                Naikkan tingkatnya dengan membuktikan identitas Anda lewat
+                lembaga sertifikasi elektronik. Kami hanya meminta{" "}
+                <strong>nama</strong> dan <strong>nama lembaga pemeriksanya</strong> —
+                NIK dan tanggal lahir tidak diminta dan tidak pernah sampai ke
+                kami.
+              </p>
+              <form action={aksiMulaiEid} className="formBaris">
+                <input type="hidden" name="domain" value={keadaan.domain} />
+                <input type="hidden" name="tingkat" value="identitas" />
+                <TombolKirim
+                  label="Naikkan ke Identitas Terverifikasi"
+                  labelSedang="Menyiapkan…"
+                />
+              </form>
+            </>
+          )}
+        </section>
+
+        {kabar && <p className={kabarBuruk ? "galat" : "kabar"}>{kabar}</p>}
 
         <p className="note">
-          Langkah berikutnya — menautkan identitas e.id — belum dipasang.{" "}
+          Penerbitan halaman publik belum dipasang.{" "}
           <a href="/daftar">Daftarkan domain lain</a>
         </p>
       </>

@@ -316,3 +316,70 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
 @media (prefers-reduced-motion: reduce) {
   .putar { animation: none; border-top-color: rgba(255, 255, 255, 0.7); }
 }
+
+/* ---------- langkah verifikasi ----------
+   Dibuat sebagai baris yang dipisah garis tipis, BUKAN kartu dengan ikon
+   dalam kotak pastel — sesuai arah desain di CLAUDE.md. */
+
+.langkah {
+  border-top: 1px solid var(--rule);
+  padding: 1.35rem 0;
+  max-width: var(--measure);
+}
+.langkah:last-of-type { border-bottom: 1px solid var(--rule); }
+
+.langkahKepala {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+.langkahKepala h2 {
+  font-size: 1.06rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.langkahIsi {
+  margin: 0 0 0.2rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.dataIdentitas { margin: 0.6rem 0 0; }
+.dataIdentitas > div {
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
+  gap: 0.4rem 1rem;
+  padding: 0.32rem 0;
+}
+.dataIdentitas dt {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+.dataIdentitas dd {
+  margin: 0;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.tautanDompet { margin: 0.9rem 0 0; }
+.tautanDompet a {
+  display: inline-block;
+  font-weight: 600;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.55rem 1rem;
+  text-decoration: none;
+}
+.tautanDompet a:hover {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.petunjukTautan {
+  margin-left: 0.7rem;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
