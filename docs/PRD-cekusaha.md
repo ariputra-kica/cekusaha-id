@@ -188,12 +188,24 @@ Data hasil hanya dapat diambil selama `presentation_ttl` masih hidup (contoh dok
 
 Polling dipilih daripada webhook. Dokumentasi e.id sendiri menyarankan polling untuk kasus sederhana, dan webhook menuntut URL publik serta menambah komponen yang tidak diperlukan.
 
-### 🔲 Yang dilengkapi pada hari pelaksanaan
+### Nilai yang berlaku
 
-- Nama dan `schema_id` skema yang sebenarnya
-- Nama field persis di dalam `credentialSubject`
-- Lingkungan yang berlaku: sandbox (`gateway-sandbox.e.id`) atau produksi (`gateway.e.id`)
-- Apakah skema bersifat publik atau memerlukan `private_code`
+Semua di bawah ini diperoleh dengan memanggil API-nya langsung pada 31 Agustus 2026, bukan dari dokumentasi.
+
+**Lingkungan: produksi, `https://gateway.e.id`.** Sandbox tidak dipakai.
+
+**Verification Schema** milik kami, dibuat sekali lalu dipakai berulang. ID-nya bukan rahasia dan boleh tampil di repositori publik.
+
+| Tingkat | Document Schema penerbit | `verifier_doc_schema_id` | `required_fields` |
+|---|---|---|---|
+| **Kontak Terverifikasi** | EID Membership Lv1 | `179f9489-b6e9-4bfe-9db0-a674ebaeb943` | `email`, `phone_number` |
+| **Identitas Terverifikasi** | KYC Verification by PSrE | `074f157d-a743-4647-a39c-358b66da454a` | `fullname`, `verificator` |
+
+Nama field di kolom terakhir persis seperti yang muncul di dalam `credentialSubject`.
+
+**`private_code` tidak diperlukan.** Permintaan presentasi hanya mengirim `verifier_doc_schema_id` dan `expires_in`, dan diterima.
+
+**Satu Verification Schema hanya boleh memuat satu skema.** Mencoba memasukkan dua menghasilkan `HTTP 500` dengan pesan `only single schema is currently supported`. Itulah sebabnya penjenjangan dijalankan sebagai dua sesi terpisah yang disatukan lewat `holder_did` yang sama, bukan satu sesi yang meminta keduanya sekaligus.
 
 ---
 
