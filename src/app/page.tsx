@@ -50,9 +50,9 @@ export default async function Beranda({
         <h2>Apa yang diperiksa</h2>
         <ul>
           <li>
-            <strong>Kepemilikan domain.</strong> Pemilik melakukan verifikasi
-            domain melalui ketentuan yang berlaku. Hanya orang yang memiliki
-            akses langsung ke domain yang bisa melakukannya.
+            <strong>Kepemilikan domain.</strong> Pemilik usaha melakukan
+            verifikasi kepemilikan domain dengan membuktikan akses langsung ke
+            domainnya.
           </li>
           <li>
             <strong>Identitas pemilik.</strong> Kontak atau identitas

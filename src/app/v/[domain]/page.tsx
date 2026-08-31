@@ -66,7 +66,7 @@ export default async function VerifikasiPublik({
           <h1 className="putusanGabung">
             <span className="putusanDomain">{d.domain}</span>,{" "}
             <span className="putusanStatus putusanStatus--netral">
-              belum terverifikasi di cekusaha.id
+              belum terverifikasi
             </span>
           </h1>
         </header>
@@ -237,7 +237,7 @@ export default async function VerifikasiPublik({
             )}
           </dl>
           <p className="kontakAjakan">
-            Cocokkan dengan kontak yang Anda terima.
+            Cocokkan dengan kontak yang diberikan pemilik usaha.
           </p>
         </section>
       )}

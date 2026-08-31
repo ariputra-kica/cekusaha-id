@@ -243,6 +243,15 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   line-height: 1.5;
 }
 
+/* Nilai TXT dan tombol salinnya. Tombol dijaga tidak ikut menyusut supaya
+   tidak pernah terpotong oleh nilai yang panjang. */
+.recordDcv .nilaiBaris {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.recordDcv .nilaiBaris .tombolSalin { flex: 0 0 auto; }
+
 /* Dua paragraf petunjuk di layar tunggu DCV. Perannya sama, jadi ukurannya
    disamakan. Lebarnya mengikuti tabel di antaranya, bukan dipatok sendiri:
    paragraf yang berhenti jauh sebelum tepi tabel meninggalkan ruang kosong
@@ -403,7 +412,27 @@ h1, h2, h3 { letter-spacing: -0.02em; line-height: 1.15; text-wrap: balance; mar
   word-break: break-word;
 }
 
-.tautanDompet { margin: 0.9rem 0 0; }
+/* QR di kiri, tautan dan tombol periksa di kanan. Keduanya menuju alamat
+   yang sama; yang berbeda hanya di perangkat mana pemilik membukanya. */
+.dompetBaris {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-top: 0.9rem;
+}
+.qrDompet {
+  flex: 0 0 auto;
+  width: 160px;
+  height: 160px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: #ffffff;
+  padding: 0.4rem;
+}
+.dompetAksi { flex: 1 1 16rem; min-width: 0; }
+
+.tautanDompet { margin: 0; }
 .tautanDompet a {
   display: inline-block;
   font-weight: 600;

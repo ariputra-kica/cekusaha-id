@@ -2,6 +2,8 @@ import { bacaKeadaan } from "@/lib/dcv";
 import { bacaSemuaIdentitas, bacaSesiAktif, SKEMA, type Tingkat } from "@/lib/eid";
 import { aksiMulai, aksiCekUlang, aksiMulaiEid, aksiPeriksaEid, aksiTerbitkan } from "./actions";
 import TombolKirim from "./TombolKirim";
+import TombolSalin from "../hasil/TombolSalin";
+import QRCode from "qrcode-svg";
 import { rapikanNama, rapikanTelepon, rapikanVerificator } from "@/lib/tampilan";
 
 const PESAN_EID: Record<string, string> = {
@@ -51,6 +53,32 @@ function jamLengkap(iso: string | null) {
   });
 }
 
+/**
+ * QR sebagai data URI. Isinya alamat dompet yang dikembalikan e.id, sama
+ * persis dengan yang dituju tautan di sebelahnya.
+ *
+ * Dua jalan masuk yang melayani keadaan berbeda: QR untuk pemilik yang
+ * membuka halaman ini di komputer sementara dompetnya di ponsel, tautan
+ * untuk pemilik yang memang sedang di ponsel dan tidak bisa memindai
+ * layarnya sendiri.
+ */
+function qrDompet(alamat: string) {
+  const svg = new QRCode({
+    content: alamat,
+    padding: 1,
+    width: 320,
+    height: 320,
+    // Hitam di atas putih, kontras penuh, paling andal dipindai.
+    color: "#000000",
+    background: "#ffffff",
+    ecl: "M",
+    // Tanpa ini tiap modul jadi satu <rect> sendiri dan berkasnya
+    // membengkak jadi ratusan kilobyte.
+    join: true,
+  }).svg();
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
 /** Tampilan saat satu sesi presentasi e.id sedang menunggu pemilik. */
 function SesiBerjalan({
   domain,
@@ -66,23 +94,38 @@ function SesiBerjalan({
         {SKEMA[sesi.tingkat].mintaManusia}.
       </p>
 
-      {/* Tab baru: kalau tautan ini menimpa halaman, pemilik kehilangan
-          tempat menekan "Periksa status" setelah menyetujui di e.id. */}
-      <p className="tautanDompet">
-        <a
-          href={sesi.walletUrl ?? "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Buka di aplikasi e.id
-        </a>
-      </p>
+      <div className="dompetBaris">
+        {sesi.walletUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            className="qrDompet"
+            src={qrDompet(sesi.walletUrl)}
+            alt="QR menuju permintaan verifikasi e.id"
+            width={160}
+            height={160}
+          />
+        )}
 
-      <form action={aksiPeriksaEid} className="formBaris">
-        <input type="hidden" name="domain" value={domain} />
-        <input type="hidden" name="sessionId" value={sesi.sessionId} />
-        <TombolKirim label="Periksa status" labelSedang="Memeriksa…" />
-      </form>
+        <div className="dompetAksi">
+          {/* Tab baru: kalau tautan ini menimpa halaman, pemilik kehilangan
+              tempat menekan "Periksa status" setelah menyetujui di e.id. */}
+          <p className="tautanDompet">
+            <a
+              href={sesi.walletUrl ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Buka di aplikasi e.id
+            </a>
+          </p>
+
+          <form action={aksiPeriksaEid} className="formBaris">
+            <input type="hidden" name="domain" value={domain} />
+            <input type="hidden" name="sessionId" value={sesi.sessionId} />
+            <TombolKirim label="Periksa status" labelSedang="Memeriksa…" />
+          </form>
+        </div>
+      </div>
     </>
   );
 }
@@ -99,7 +142,7 @@ export default async function Pendaftaran({
   if (!keadaan) {
     return (
       <>
-        <p className="eyebrow">Untuk pemilik usaha.</p>
+        <p className="eyebrow">Untuk pemilik usaha</p>
         <h1 className="daftarJudul">Verifikasi Kepemilikan Domain</h1>
 
         <form action={aksiMulai} className="formBaris formBesar">
@@ -288,7 +331,7 @@ export default async function Pendaftaran({
   /* ---------- Menunggu ---------- */
   return (
     <>
-      <p className="eyebrow">Untuk pemilik usaha.</p>
+      <p className="eyebrow">Untuk pemilik usaha</p>
       <h1 className="domainJudul">{keadaan.domain}</h1>
 
       <p className="statusBaris">
@@ -313,8 +356,9 @@ export default async function Pendaftaran({
         </div>
         <div>
           <dt>Nilai</dt>
-          <dd>
+          <dd className="nilaiBaris">
             <code className="nilaiTxt">{keadaan.nilaiTxt}</code>
+            <TombolSalin teks={keadaan.nilaiTxt ?? ""} />
           </dd>
         </div>
       </dl>
